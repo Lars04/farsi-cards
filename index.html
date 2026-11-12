@@ -1987,7 +1987,7 @@ function setDir(d){dir=d;LS.set("fa-dir",d);$("dirFa").setAttribute("aria-presse
 function setLang(l){lang=l;LS.set("fa-lang",l);const en=l==="en";
   $("langRu").setAttribute("aria-pressed",!en);$("langEn").setAttribute("aria-pressed",en);
   $("dirFa").textContent=en?"Фарси → Eng":"Фарси → Рус";$("dirRu").textContent=en?"Eng → Фарси":"Рус → Фарси";
-  $("q").placeholder=en?"Поиск по фарси, русскому или английскому":"Поиск по фарси или русскому";
+  $("q").placeholder=en?"Поиск: фарси или English":"Поиск по фарси или русскому";
   render();renderList()}
 
 $("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;topic=b.dataset.k;LS.set("fa-topic",topic);renderChips();build(true)});
