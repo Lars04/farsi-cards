@@ -104,6 +104,10 @@ td small{display:block;color:var(--muted);font-weight:400}
       <button id="dirFa" aria-pressed="true">Фарси → Рус</button>
       <button id="dirRu" aria-pressed="false">Рус → Фарси</button>
     </div>
+    <div class="seg" role="group" aria-label="Язык перевода">
+      <button id="langRu" aria-pressed="true">RU</button>
+      <button id="langEn" aria-pressed="false">EN</button>
+    </div>
     <button class="ghost" id="shuffle">Перемешать</button>
     <button class="ghost" id="reset">Сбросить прогресс</button>
     <label class="tog"><input type="checkbox" id="showKnown"> показывать выученные</label>
@@ -1018,11 +1022,896 @@ parking omoomi | общественная парковка
 `
 };
 
+// English: one line per card, same order as RAW. "translation | note" (note optional; if omitted, the original note is used)
+const EN = {
+"Алфавит": `
+alef — "a"; آ — long "â" | ast است — is · baba بابا — dad · âb آب — water · doesn't connect to the letter on its left
+be — "b" | boos بوس — kiss · tâb تاب — swing · forms: بـ ـبـ ـب ب
+pe — "p" | par پر — feather · separ سپر — shield · chap چپ — left · toop توپ — ball
+te — "t" | tar تر — wet · behtar بهتر — better · sakht سخت — hard · soot سوت — whistle
+se — "s" | servat ثروت — wealth · Arabic "s", rare
+jim — "j" | jâ جا — place · kojâ کجا — where · tâj تاج — crown · forms: جـ ـجـ ـج ج
+che — "ch" | che چه — what · kachal کچل — bald · moch مچ — wrist · pârch پارچ — jug
+he — soft "h" | hâlâ حالا — now · sahar سحر — dawn · sobh صبح — morning · sharh شرح — description
+khe — throaty "kh" | khodâ خدا — God · sakht سخت — hard · mikh میخ — nail · shâkh شاخ — horn
+dâl — "d" | bad بد — bad · fardâ فردا — tomorrow · doesn't connect on the left
+zâl — "z" | bazr بذر — seed · zehn ذهن — mind · doesn't connect on the left
+re — "r" | mard مرد — man · kâr کار — work · doesn't connect on the left
+ze — "z" | mozd مزد — wage · bâzâr بازار — bazaar · doesn't connect on the left
+zhe — "zh" (as in "measure") | mozheh مژه — eyelash · zhâleh ژاله — dew · doesn't connect on the left
+sin — "s" | salâm سلام — hi · pesar پسر — son · hes حس — feeling · tars ترس — fear
+shin — "sh" | shir شیر — milk · jashn جشن — celebration · rish ریش — beard · bâsh باش — be
+sâd — "s" | sobh صبح — morning · Arabic "s"
+zâd — "z" | Arabic "z", rare
+tâ — "t" | Arabic "t"
+zâ — "z" | zohr ظهر — noon
+eyn — glottal stop | asr عصر — evening · eshgh عشق — love
+gheyn — throaty "gh" | ghazâ غذا — food
+fe — "f" | fardâ فردا — tomorrow · farsi فارسی — Farsi
+ghâf — throaty "gh" | ghalb قلب — heart · ghabl قبل — before
+kâf — "k" | kam کم — little · shekar شکر — sugar · namak نمک — salt · khook خوک — pig
+gâf — "g" | gâv گاو — cow · jegar جگر — liver · sag سگ — dog · marg مرگ — death
+lâm — "l" | lab لب — lips · ghalb قلب — heart · gol گل — flower · pool پول — money
+lâm + alef | salâm سلام — hi · written as the ligature لا
+mim — "m" | man من — I · beman بمن — to me · delam دلم — my heart · salâm سلام
+nun — "n" | namak نمک — salt · tond تند — fast · sen سن — age · jân جان — life, soul
+vâv — "v", "u", "o" | joon جون — dear · zood زود — early, quickly · doesn't connect on the left
+he — "h"; at the end of a word "-e" | hafteh هفته — week · khâneh خانه — house
+ye — "y", "i" | yâs یاس — jasmine · biâ بیا — come · si سی — thirty · pari پری — fairy
+fatheh — short "a" (usually not written) | dar در — door
+kasreh — short "e" (usually not written) | del دل — heart
+zammeh — short "o" (usually not written) | moch مچ — wrist
+long vowels "u", "i", "â" | always written: zood زود · si سی · âb آب
+the 7 letters that don't connect to the letter on their left | the next letter after them takes its initial form
+`,
+"Семья и люди": `
+son; boy
+daughter; girl
+my son
+my daughter
+mom / mother
+dad / father
+my mom
+my dad
+sister | abji — colloquial
+brother | dadash — colloquial
+grandfather
+grandmother
+mommy
+relatives, family
+spouse: wife / husband
+aunt (mom's sister)
+uncle (mom's brother)
+aunt (dad's sister)
+uncle (dad's brother)
+uncle's wife (dad's side)
+uncle's wife (mom's side)
+aunt's husband (mom's side)
+aunt's husband (dad's side)
+cousin, male / female (dad's brother's kids)
+cousin, male / female (mom's brother's kids)
+cousin, male / female (mom's sister's kids)
+cousin, male / female (dad's sister's kids)
+brother's wife
+sister's husband
+child
+children
+single (not married)
+married
+friend
+friends
+guest
+party; having guests
+person
+people
+teacher
+student
+Mr., sir
+Mrs., lady
+`,
+"Приветствия и вежливость": `
+hi, hello
+goodbye
+how are you?
+I'm fine
+what's new?
+all good (reply to "what's new?")
+sends their regards
+is everything OK?
+thank God
+God
+thank you
+you're welcome
+please (asking)
+if it's no trouble, would you kindly
+well done
+excellent, great | in the chat: awli
+my dear
+affectionate "I'd give my life for you"
+affectionate "I'd sacrifice myself for you"
+enjoy your meal
+good night
+have a good night
+see you
+see you very soon
+hope to see you again
+take care of yourself
+you too
+me too
+have a good time
+welcome
+welcome to our home
+please (come in / help yourself)
+please, have a seat
+please, help yourself (to food)
+at your service
+it's nothing (modest, about a gift)
+nice to meet you
+glad to see you
+OK, fine
+yes
+no
+I enjoyed it
+repeat after me
+look
+let's go
+`,
+"Вопросы": `
+where?
+when?
+why?
+how?
+what?
+who?
+which?
+how many?
+how much (money, amount)?
+what happened?
+what's your name?
+where are you from?
+how old are you?
+what time is it?
+what's the date today?
+how often?
+what did you do?
+how's the weather?
+how much does it cost?
+where's dad?
+where are you going?
+when were you born?
+can you hear me?
+how's the picture (can you see me)?
+`,
+"Местоимения и маленькие слова": `
+I
+you
+he, she
+we
+you (plural / polite)
+they
+this
+that
+these
+those
+here
+there
+like this, this way
+that way
+all of us
+me (object) | babam mano doost dare — my dad loves me
+with me
+with you
+with him / with her
+with them
+for
+for me
+for you
+for us · for you (pl.) · for them
+and
+or
+but
+because
+if
+so, then
+maybe
+only
+with
+to, in (preposition)
+from
+like, similar to
+after
+before
+when (in a sentence)
+(no) more; anymore; else
+again
+very
+a lot
+little by little
+now
+right now
+soon, quickly
+about
+for example
+example
+meaning
+`,
+"Глаголы": `
+to go | miram · raftam · boro · naro (don't go)
+to come | miam · bia (come)
+to take (away), to drive someone | mibaram · bordam · bebar
+to bring | miaram · ovordam · biar
+to take, to get
+to learn
+to speak
+to talk, to chat
+to say
+to give
+to have
+to love, to like
+to be | hastam · boodam · nistam (I am not)
+to know (how)
+to want
+can, to be able
+to ask
+to open
+to close
+to become
+to get off (a vehicle)
+to arrive
+to eat, to drink | mikhoram · khordam · bokhor · nakhor
+to sit
+to get up | pamisham · pasho (get up)
+to wake up
+to get ready
+to understand
+to repeat
+to work
+to be busy | man kar daram — I'm busy
+to invite
+to help
+to study, to do homework | mikham dars bekhunam — I want to study
+to read, to study
+to sing; to read | mituni bekhuni? — can you sing?
+to dance
+to cook
+to drive
+to listen
+to go shopping
+to swim
+to ride a bike
+to ride a motorbike
+to ride a horse
+to ride a camel
+to stay
+to think
+to see; to meet
+to meet someone
+to send
+to play
+to draw
+to finish
+to practice
+to take photos
+to do sports
+to sleep
+to smoke
+to play the piano
+to brush (teeth)
+to take a shower
+to turn on
+to turn off
+to put on, to wear
+to change | lebasamo avaz mikonam — I'm changing clothes
+to wash | zarfaro mishoori? — do you wash the dishes?
+to travel
+to live
+to hope
+to be afraid
+to come back
+to keep, to hold
+to suggest
+to need
+to exchange
+to count, to calculate
+to walk around | charkh zadan tuye internet — to browse the internet
+to enjoy
+to give an injection
+to shorten | muhamo kutah kardam — I got a haircut
+must, have to | bayad beram — I have to go
+to be going to (do) | gharare komak bekonam — I'm going to help
+`,
+"Время": `
+day
+night
+morning
+noon
+afternoon
+evening
+today
+yesterday
+tomorrow
+tonight
+last night
+tomorrow night
+week
+month
+year
+New Year
+this week · last week · next week
+this month · last month · next month
+this year · last year · next year
+season
+spring
+summer
+autumn
+winter
+Saturday
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+hour; clock, watch
+minute
+second
+a quarter (15 minutes)
+half (30 minutes)
+a quarter to seven
+time
+date
+always
+usually
+often
+sometimes
+rarely
+never
+as always
+every day
+every morning
+every evening
+every week
+every month
+every year
+once a day
+twice a day
+three times a month
+once a week
+`,
+"Месяцы": `
+1st month (March–April)
+2nd month (April–May)
+3rd month (May–June)
+4th month (June–July)
+5th month (July–August)
+6th month (August–September)
+7th month (September–October)
+8th month (October–November)
+9th month (November–December)
+10th month (December–January)
+11th month (January–February)
+12th month (February–March)
+`,
+"Числа": `
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+30
+40
+50
+60
+70
+80
+90
+100
+200
+300
+400
+500
+600
+700
+800
+900
+1000
+first
+second
+third
+fourth
+fifth
+sixth
+10:05
+`,
+"Еда": `
+water
+food
+breakfast
+lunch
+dinner
+egg
+chicken
+pickles
+nuts
+cup
+plate / dishes
+taste
+tasty
+salty
+sweet
+sour
+bitter
+full (not hungry)
+hungry
+`,
+"Прилагательные": `
+good
+big · bigger; older
+small · smaller
+cheap
+expensive
+easy
+hard, difficult
+clean
+dirty
+heavy
+light (weight)
+tall, long
+short
+dark
+bright, light
+fat
+thin
+beautiful
+ugly
+noisy
+quiet
+cold
+warm
+hot
+cool
+wet
+dry
+thick (about a book)
+thin
+happy
+upset
+kind
+unkind
+new
+old
+foreign
+smart
+tired
+comfortable
+angry, annoyed
+busy
+better · worse
+rainy
+foggy
+adjectives
+`,
+"Вещи и места": `
+house, home
+yard
+room
+door
+street; boulevard
+city
+mountain
+country / countries
+world
+courses, learning center
+at work
+car
+book
+notebook
+pencil
+pen
+eraser
+bag
+watch, clock
+hat
+clothes
+gift
+money
+price
+thing / things
+tools
+screwdriver
+lamp, light
+tooth / teeth
+music
+game / games
+computer games
+plan
+life
+work; business
+love
+fear
+pain
+name
+last name
+tip (money)
+voice, sound
+picture, image
+weather; air
+rain
+cat
+dog
+donkey
+cow
+horse
+camel
+north
+south
+west
+east
+currency exchange office
+rate
+exchange rate
+display board
+savings account
+current account
+socializing, communication
+personal profile
+`,
+"Грамматика": `
+verb endings: I · you · he · we · you (pl.) · they
+present tense | mi + kon + am = mikonam (I do)
+"to…" and commands | mikham beram — I want to go · boro — go
+negation
+doing right now (like -ing) | man daram sham mikhoram — I'm having dinner right now
+was doing at that moment | man dashtam sham mikhordam — I was having dinner
+I am · you are · he is · we are · you are · they are (to be)
+I'm not · you're not · he's not… (not to be)
+I was · you were… (past of "to be")
+my · your · his/her
+our · your (pl.) · their
+comparative (-er) | bozorg → bozorgtar (bigger)
+direct object marker | daro baz mikonam — I open the door
+plural
+`,
+"Фразы": `
+I speak Farsi
+I'm learning Farsi now
+I can speak Farsi
+I'm Turkmen
+I'm 22 years old
+My name is Rejep
+Take us to the Homa hotel
+I want to take a taxi
+I took a taxi
+Come here, please
+Go there, please
+Talk to me, please
+Could you please open the door?
+Could you bring some water, please?
+Give me money
+How much do I owe you? (polite)
+I want to exchange dollars
+What do you need it for?
+I have money
+I have one sister
+I don't have a brother
+Does your dad have a car?
+I want to come to your house
+I wake up at 7
+What time do you have breakfast?
+It's 11 o'clock
+What did you do today?
+Today I was at my uncle's
+The weather was rainy
+Which one is bigger?
+Istanbul is bigger than Ashgabat
+My dad doesn't eat fast food anymore
+I shower once a day
+I want to see many countries
+I want to see the city
+I'm saying that I love you
+I hope you like it
+These are my parents
+Just come soon
+I missed you | literally "my heart got tight for you"
+Say hi to mom and dad
+Can I park here?
+So where should I go?
+Today I want to see the bazaar
+How many days will we stay in Tehran?
+I think spring would be better
+I'd really love to see Shiraz too
+If you've finished breakfast, let's go
+After Isfahan we'll go to Shiraz
+We want to keep our money (in the bank)
+Excuse me, sir, I want to exchange dollars
+`,
+"Предложения из учебника": `
+Hello, how are you?
+Where's dad? Where's Farzad?
+They're coming
+Yes, she speaks Farsi
+Is your daughter OK?
+How are your mom and dad?
+Sir, is this taxi free?
+Yes, ma'am, get in
+Sara dear, you open the door
+Mom, my hands are full
+Where are you going?
+Here you go, it's nothing (no charge)
+I want to go to the Homa hotel
+Do you want to take a taxi?
+Where do you want us to go?
+They want to be alone
+Did you get to the hotel?
+Yes, we just arrived
+No, we haven't arrived yet
+Honestly, you shouldn't have gone to a hotel
+This way it's more comfortable for all of us
+We'd like to come over for dinner
+What are your plans for tomorrow?
+Do you want to take your dad's car?
+No, we'll call a taxi
+Do you want to have dinner together tomorrow?
+Yes, I'd love to
+Should I get you a taxi?
+Yes, get me a taxi
+Don't worry. Just come early
+Goodbye, see you tomorrow
+Maybe Monday is better
+First we have to visit family
+I think a week is good
+Since it's summer, let's go north first
+We'll ask her mom tonight
+Which season is good for visiting Isfahan?
+Mom, you said we could go to the mountains
+Yes, maybe we'll go to Tochal on Friday
+Yes dad, let's go see the city
+Mom, your stew turned out really tasty
+Enjoy, my daughter. Have some more
+Mr. Daniel, please have some kebab
+Thank you, dear father, I've eaten a lot
+I don't want any more. I'm full
+We brought you some small gifts
+You shouldn't have gone to the trouble
+Mom, put on this dress
+I hope you like it
+Let me bring some nuts to keep us busy
+Thank you, what delicious food!
+Please, don't be so formal
+Please, sit here
+Daniel, stop here by the bank
+What do you need?
+We need to exchange some of our money
+No parking here
+There's a public parking a bit further on
+We need to go to the currency exchange window
+Today's dollar rate is shown on the board
+Work out how much you need
+Can we also open a current account?
+I suggest you open a savings account
+OK, we'll do just that
+`,
+"Предложения: упражнения": `
+I want to go
+I wanted to go
+Maybe I'll go
+I have to go
+I can go
+We can go
+I want to sit here
+Do you want to sit here?
+You worked
+My dad doesn't work
+Your dad doesn't work anymore
+I wanted to take a taxi
+I want to invite you to dinner
+She wanted to open the door
+They want to work
+I want to learn Farsi
+Do you understand?
+Did you understand?
+I want to brush my teeth
+I need to brush my teeth
+I'm taking a shower right now
+I took a shower
+I was taking a shower (at that moment)
+I'm helping right now
+I was helping (at that moment)
+I want to help
+I have to help
+You're going to help
+I'm going to learn Farsi
+My sister is going to go to China
+My mom is going to have dinner
+My dad is going to invite his friend
+Tomorrow I'm going to work very hard
+Soon I'm going to speak Farsi very well
+We're going to get ready for the party
+Tonight we're going to check our phones
+I could speak when I was 3
+My brother could ride a bike when he was 5
+My sister could play the piano when she was 10
+Could your mom cook when she was 14?
+We couldn't drive when we were 12
+I couldn't speak Farsi when I was 19, but now I can a little
+I always listen to music
+My dad always speaks Turkmen
+My mom always cooks tasty food
+I usually sleep in class
+I never smoke
+I rarely dance
+I went to the cinema
+I'm going to the cinema right now
+I'm watching TV right now
+I met my friends
+I don't ride a bike anymore
+My mom doesn't cook anymore
+We don't clean the house anymore
+You don't speak English anymore
+Could you please close the door?
+Could you please turn on the TV?
+Could you please talk to me?
+Could you please turn off the lights?
+How old is your dad?
+Does your mom have a bike?
+I want to go shopping
+Do you want to come to my house?
+I've been to Ashgabat
+I'm thinking right now
+I'd like to see the city
+A book is heavier than paper
+A laptop is more expensive than a T-shirt
+I'm taller than my sister
+Dey is colder than Tir
+I took photos for my sister
+`,
+"Из учебника": `
+dear; soul | added to a name: Sara jan
+heart
+yes (polite)
+eye; "sure, I'll do it" | reply to a request from an elder
+you're very welcome here | literally "your steps on my eyes"
+to bother you (to come over)
+trouble, bother
+don't go to any trouble
+you shouldn't have gone to the trouble
+don't worry
+until tomorrow
+honestly, I swear
+but, after all
+still, (not) yet | hanooz naresidim — we haven't arrived yet
+anyway
+just now; besides
+alone
+taarof: polite formalities
+don't be so formal
+thanks for your effort | literally "may your hand not hurt"
+thank you (affectionate)
+how are you?
+how are the kids?
+please come in
+here you go
+excuse me
+it's nothing (you're welcome)
+to offer, to present
+empty, free | in taxi khalieh? — is this taxi free?
+my hands are full
+get in (the car)
+should I give a tip?
+transport
+passenger / passengers
+fare
+straight, directly
+toman / rial (Iranian money) | 1 toman = 10 rials
+taxi agency
+phone conversation
+bazaar
+nature
+culture
+Nowruz, Persian New Year
+spring cleaning before Nowruz
+tablecloth (for meals)
+the "seven S" New Year table
+13th day of Nowruz (picnic outdoors)
+visiting relatives
+table manners
+souvenir
+gift
+stew
+kebab
+have some more
+I'm full
+eat something
+bread
+doogh (yogurt drink)
+rice
+mint
+basil
+fresh herbs with a meal
+sweets
+sugar
+salt
+milk
+carpet
+blessing, abundance
+lips
+heart
+flower
+feeling
+place
+crown
+bald
+wrist
+jug
+dawn
+description
+nail
+horn
+jasmine
+fairy
+bad
+seed
+mind
+man
+wage
+eyelash
+dew
+little, few
+pig
+liver
+death
+kiss
+swing
+feather
+shield
+left
+ball
+wet
+whistle
+wealth
+fast
+age
+celebration
+beard
+child
+body
+respect
+trade
+bank teller
+need | ehtiaj darid — you need
+currency exchange
+no parking
+a bit further
+public parking
+`
+};
+
 const CARDS=[];
+const EN_NOTE={"перевод мой — сверь с учителем":"my translation — check with your teacher","из чата":"from the chat"};
 for(const [topic,block] of Object.entries(RAW)){
-  block.trim().split("\n").forEach(line=>{
+  const enLines=(EN[topic]||"").trim().split("\n");
+  block.trim().split("\n").forEach((line,i)=>{
     const [f,r,n]=line.split("|").map(s=>s&&s.trim());
-    if(f&&r) CARDS.push({id:topic+"::"+f,f,r,n:n||"",t:topic});
+    const [e,en]=(enLines[i]||"").split("|").map(s=>s&&s.trim());
+    const note=n||"";
+    if(f&&r) CARDS.push({id:topic+"::"+f,f,r,n:note,e:e||r,en:en||EN_NOTE[note]||note,fe:f.replace(/глагол/g,"verb"),t:topic});
   });
 }
 const TOPICS=Object.keys(RAW);
@@ -1031,6 +1920,8 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}
 let known=new Set(LS.get("fa-known",[]));
 let topic=LS.get("fa-topic","all");
 let dir=LS.get("fa-dir","fa");
+let lang=LS.get("fa-lang","ru"); if(lang!=="en") lang="ru";
+const fw=c=>lang==="en"?c.fe:c.f, tw=c=>lang==="en"?c.e:c.r, tn=c=>lang==="en"?c.en:c.n;
 let showKnown=false;
 let deck=[],pos=0;
 const $=id=>document.getElementById(id);
@@ -1055,8 +1946,9 @@ function render(){
   $("study").hidden=empty; $("done").hidden=!empty;
   if(empty) return;
   const c=deck[pos%deck.length];
-  const front=dir==="fa"?{w:c.f,n:""}:{w:c.r,n:""};
-  const back=dir==="fa"?{w:c.r,n:c.n}:{w:c.f,n:c.n};
+  const F=fw(c), T=tw(c), N=tn(c);
+  const front=dir==="fa"?{w:F,n:""}:{w:T,n:""};
+  const back=dir==="fa"?{w:T,n:N}:{w:F,n:N};
   // при обратном направлении задерживаем смену задней стороны, чтобы ответ не мелькал
   const isScript=w=>/^[؀-ۿ\s]+$/.test(w);
   $("wF").textContent=front.w; $("nF").textContent=front.n; $("wF").classList.toggle("script",isScript(front.w)); $("wF").classList.toggle("long",front.w.length>34);
@@ -1084,14 +1976,19 @@ function renderList(){
   const q=$("q").value.trim().toLowerCase();
   let html="";
   for(const t of TOPICS){
-    const rows=CARDS.filter(c=>c.t===t&&(!q||(c.f+" "+c.r+" "+c.n).toLowerCase().includes(q)));
+    const rows=CARDS.filter(c=>c.t===t&&(!q||(c.f+" "+c.r+" "+c.n+" "+c.e+" "+c.en).toLowerCase().includes(q)));
     if(!rows.length) continue;
     html+=`<tr class="topic"><td colspan="3">${esc(t)} · ${rows.length}</td></tr>`;
-    html+=rows.map(c=>`<tr><td${/^[؀-ۿ\s]+$/.test(c.f)?' class="sc"':''}>${esc(c.f)}</td><td>${esc(c.r)}${c.n?`<small>${esc(c.n)}</small>`:""}</td><td class="k">${known.has(c.id)?"✓":""}</td></tr>`).join("");
+    html+=rows.map(c=>`<tr><td${/^[؀-ۿ\s]+$/.test(c.f)?' class="sc"':''}>${esc(fw(c))}</td><td>${esc(tw(c))}${tn(c)?`<small>${esc(tn(c))}</small>`:""}</td><td class="k">${known.has(c.id)?"✓":""}</td></tr>`).join("");
   }
   $("tbl").innerHTML=html||`<tr><td colspan="3">Ничего не найдено. Попробуй другое слово.</td></tr>`;
 }
 function setDir(d){dir=d;LS.set("fa-dir",d);$("dirFa").setAttribute("aria-pressed",d==="fa");$("dirRu").setAttribute("aria-pressed",d==="ru");render()}
+function setLang(l){lang=l;LS.set("fa-lang",l);const en=l==="en";
+  $("langRu").setAttribute("aria-pressed",!en);$("langEn").setAttribute("aria-pressed",en);
+  $("dirFa").textContent=en?"Фарси → Eng":"Фарси → Рус";$("dirRu").textContent=en?"Eng → Фарси":"Рус → Фарси";
+  $("q").placeholder=en?"Поиск по фарси, русскому или английскому":"Поиск по фарси или русскому";
+  render();renderList()}
 
 $("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;topic=b.dataset.k;LS.set("fa-topic",topic);renderChips();build(true)});
 $("card").addEventListener("click",flip);
@@ -1107,6 +2004,8 @@ $("reset").addEventListener("click",function(){
 $("showKnown").addEventListener("change",e=>{showKnown=e.target.checked;build(true)});
 $("dirFa").addEventListener("click",()=>setDir("fa"));
 $("dirRu").addEventListener("click",()=>setDir("ru"));
+$("langRu").addEventListener("click",()=>setLang("ru"));
+$("langEn").addEventListener("click",()=>setLang("en"));
 $("q").addEventListener("input",renderList);
 document.addEventListener("keydown",e=>{
   if(e.target.tagName==="INPUT")return;
@@ -1115,7 +2014,7 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="ArrowLeft")answer(false);
 });
 if(topic!=="all"&&!TOPICS.includes(topic)) topic="all";
-renderChips(); setDir(dir); build(true); renderList();
+renderChips(); setDir(dir); setLang(lang); build(true);
 </script>
 
 </body>
