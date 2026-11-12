@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+<title>Фарси с Амином</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Vazirmatn:wght@400;600&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one study column — topic chips, a big flip card, two answer buttons; a searchable word list below. Palette from Persian tilework: turquoise, lapis, saffron. */
+:root{
+  --bg:#edf3f3; --surface:#ffffff; --ink:#14273f; --muted:#5b6b7c; --line:#d3dfe1;
+  --turq:#0b7f84; --turq-soft:#d6eeee; --lapis:#1f3f78; --saffron:#c98a07; --saffron-soft:#fbefd2;
+  --again:#b5462f; --again-soft:#f7e1dc;
+  --display:"Sora","Vazirmatn",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter","Vazirmatn",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --script:"Vazirmatn","Segoe UI","Tahoma",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1622; --surface:#142335; --ink:#e7eef4; --muted:#93a4b5; --line:#24384e;
+  --turq:#3cc2c4; --turq-soft:#123a40; --lapis:#8fb0ec; --saffron:#f0b53a; --saffron-soft:#3a2e12;
+  --again:#f08a72; --again-soft:#3d211b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1622; --surface:#142335; --ink:#e7eef4; --muted:#93a4b5; --line:#24384e;
+  --turq:#3cc2c4; --turq-soft:#123a40; --lapis:#8fb0ec; --saffron:#f0b53a; --saffron-soft:#3a2e12;
+  --again:#f08a72; --again-soft:#3d211b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:1.75rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 span{color:var(--turq)}
+.sub{color:var(--muted);font-size:.875rem;margin:2px 0 0}
+.stats{display:flex;gap:14px;font-variant-numeric:tabular-nums;font-size:.875rem;color:var(--muted)}
+.stats b{color:var(--ink);font-family:var(--display);font-size:1.1rem;display:block;line-height:1.1}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .8125rem var(--body);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.chip small{color:var(--muted);margin-left:4px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--lapis);border-color:var(--lapis);color:var(--surface)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.75}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--muted);font:500 .8125rem var(--body);padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--turq-soft);color:var(--turq)}
+.ghost{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .8125rem var(--body);padding:7px 12px;border-radius:10px;cursor:pointer}
+.ghost:hover,.chip:hover{border-color:var(--turq)}
+label.tog{display:inline-flex;gap:6px;align-items:center;font-size:.8125rem;color:var(--muted);cursor:pointer;margin-left:auto}
+.progress{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--turq);width:0;transition:width .3s}
+.stage{perspective:1400px}
+.card{position:relative;height:300px;cursor:pointer;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);border-radius:20px}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px;text-align:center;
+  background-image:radial-gradient(circle at 0 0,var(--turq-soft) 0 34px,transparent 35px),radial-gradient(circle at 100% 100%,var(--saffron-soft) 0 34px,transparent 35px)}
+.back{transform:rotateY(180deg)}
+.tag{position:absolute;top:16px;left:20px;font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.count{position:absolute;top:16px;right:20px;font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.word{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,6vw,2.4rem);line-height:1.2;text-wrap:balance;overflow-wrap:anywhere}
+.word.script{font-family:var(--script);font-size:clamp(3.5rem,14vw,5.5rem);line-height:1.3;direction:rtl}
+.word.long{font-size:clamp(1.15rem,4.2vw,1.6rem);line-height:1.35}
+.note .fa{font-family:var(--script);font-size:1.15em;color:var(--ink)}
+.front .word{color:var(--lapis)}
+.back .word{color:var(--turq)}
+.note{color:var(--muted);font-size:.9375rem;max-width:44ch;overflow-wrap:anywhere}
+.hint{position:absolute;bottom:14px;font-size:.75rem;color:var(--muted)}
+.answer{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answer button{border:0;border-radius:14px;padding:14px;font:600 1rem var(--display);cursor:pointer}
+#again{background:var(--again-soft);color:var(--again)}
+#know{background:var(--turq);color:var(--surface)}
+.answer button:hover{filter:brightness(1.05)}
+button:focus-visible,.card:focus-visible,input:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+.done{text-align:center;padding:40px 20px;background:var(--surface);border:1px solid var(--line);border-radius:20px}
+.done h2{font-family:var(--display);margin:0 0 6px}
+.done p{color:var(--muted);margin:0 0 16px}
+section.list h2{font-family:var(--display);font-size:1.15rem;margin:0}
+.listhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+#q{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;min-width:0;flex:1;max-width:280px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:600;color:var(--lapis);width:45%;font-family:var(--body)}
+td.sc{font-family:var(--script);font-size:1.4rem;line-height:1.3}
+td.k{width:22px;color:var(--turq);font-weight:700}
+tr.topic td{font-family:var(--display);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--saffron);padding-top:18px;border-bottom:0;font-weight:600}
+td small{display:block;color:var(--muted);font-weight:400}
+@media (max-width:480px){.card{height:260px}.face{padding:22px}}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Фарси <span>с Амином</span></h1>
+      <p class="sub">Слова и буквы из чата с учителем и страниц учебника, июль–ноябрь</p>
+    </div>
+    <div class="stats"><div><b id="sTotal">0</b>слов</div><div><b id="sKnown">0</b>выучено</div></div>
+  </header>
+
+  <div class="chips" id="chips" role="group" aria-label="Темы"></div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Направление">
+      <button id="dirFa" aria-pressed="true">Фарси → Рус</button>
+      <button id="dirRu" aria-pressed="false">Рус → Фарси</button>
+    </div>
+    <button class="ghost" id="shuffle">Перемешать</button>
+    <button class="ghost" id="reset">Сбросить прогресс</button>
+    <label class="tog"><input type="checkbox" id="showKnown"> показывать выученные</label>
+  </div>
+
+  <div class="progress"><i id="bar"></i></div>
+
+  <div id="study">
+    <div class="stage">
+      <div class="card" id="card" tabindex="0" role="button" aria-label="Перевернуть карточку">
+        <div class="face front"><span class="tag" id="tagF"></span><span class="count" id="countF"></span><div class="word" id="wF"></div><div class="note" id="nF"></div><span class="hint">нажми, чтобы увидеть перевод</span></div>
+        <div class="face back"><span class="tag" id="tagB"></span><span class="count" id="countB"></span><div class="word" id="wB"></div><div class="note" id="nB"></div></div>
+      </div>
+    </div>
+    <div class="answer" style="margin-top:12px">
+      <button id="again">Повторить</button>
+      <button id="know">Знаю</button>
+    </div>
+  </div>
+  <div class="done" id="done" hidden>
+    <h2>Тема пройдена</h2>
+    <p>Все карточки в этой теме отмечены как выученные.</p>
+    <button class="ghost" id="restart">Пройти ещё раз</button>
+  </div>
+  <p class="sub" style="margin:0">Пробел — перевернуть · ← повторить · → знаю</p>
+
+  <section class="list">
+    <div class="listhead"><h2>Все слова</h2><input id="q" type="search" placeholder="Поиск по фарси или русскому" aria-label="Поиск"></div>
+    <div style="overflow-x:auto"><table id="tbl"></table></div>
+  </section>
+</div>
+
+<script>
+// Формат: "фарси | перевод | заметка (формы глагола и т.п.)"
+const RAW = {
+"Алфавит": `
+ا آ | alef — «а»; آ — долгое «â» | ast است — есть · baba بابا — папа · âb آب — вода · не соединяется с буквой слева
+ب | be — «б» | boos بوس — поцелуй · tâb تاب — качели · формы: بـ ـبـ ـب ب
+پ | pe — «п» | par پر — перо · separ سپر — щит · chap چپ — левый · toop توپ — мяч
+ت | te — «т» | tar تر — мокрый · behtar بهتر — лучше · sakht سخت — трудный · soot سوت — свисток
+ث | se — «с» | servat ثروت — богатство · арабское «с», встречается редко
+ج | jim — «дж» | jâ جا — место · kojâ کجا — где · tâj تاج — корона · формы: جـ ـجـ ـج ج
+چ | che — «ч» | che چه — что · kachal کچل — лысый · moch مچ — запястье · pârch پارچ — кувшин
+ح | he (ҳе) — «х» мягкое | hâlâ حالا — сейчас · sahar سحر — рассвет · sobh صبح — утро · sharh شرح — описание
+خ | khe — «х» гортанное | khodâ خدا — Бог · sakht سخت — трудный · mikh میخ — гвоздь · shâkh شاخ — рог
+د | dâl — «д» | bad بد — плохой · fardâ فردا — завтра · не соединяется слева
+ذ | zâl — «з» | bazr بذر — семя · zehn ذهن — ум · не соединяется слева
+ر | re — «р» | mard مرد — мужчина · kâr کار — работа · не соединяется слева
+ز | ze — «з» | mozd مزد — зарплата · bâzâr بازار — базар · не соединяется слева
+ژ | zhe — «ж» | mozheh مژه — ресница · zhâleh ژاله — роса · не соединяется слева
+س | sin — «с» | salâm سلام — привет · pesar پسر — сын · hes حس — чувство · tars ترس — страх
+ش | shin — «ш» | shir شیر — молоко · jashn جشن — праздник · rish ریش — борода · bâsh باش — будь
+ص | sâd — «с» | sobh صبح — утро · арабское «с»
+ض | zâd — «з» | арабское «з», встречается редко
+ط | tâ — «т» | арабское «т»
+ظ | zâ — «з» | zohr ظهر — полдень
+ع | eyn — гортанная пауза | asr عصر — вечер · eshgh عشق — любовь
+غ | gheyn — «г» гортанное | ghazâ غذا — еда
+ف | fe — «ф» | fardâ فردا — завтра · farsi فارسی — фарси
+ق | ghâf — «г» гортанное | ghalb قلب — сердце · ghabl قبل — до, перед
+ک | kâf — «к» | kam کم — мало · shekar شکر — сахар · namak نمک — соль · khook خوک — свинья
+گ | gâf — «г» | gâv گاو — корова · jegar جگر — печень · sag سگ — собака · marg مرگ — смерть
+ل | lâm — «л» | lab لب — губы · ghalb قلب — сердце · gol گل — цветок · pool پول — деньги
+لا | lâm + alef | salâm سلام — привет · пишется как лигатура لا
+م | mim — «м» | man من — я · beman بمن — мне · delam دلم — моё сердце · salâm سلام
+ن | nun — «н» | namak نمک — соль · tond تند — быстрый · sen سن — возраст · jân جان — жизнь, душа
+و | vâv — «в», «у», «о» | joon جون — дорогой · zood زود — рано, быстро · не соединяется слева
+ه | he — «х»; на конце слова «-е» | hafteh هفته — неделя · khâneh خانه — дом
+ی | ye — «й», «и» | yâs یاس — жасмин · biâ بیا — приходи · si سی — тридцать · pari پری — фея
+اَ | fatheh — краткое «а» (обычно не пишется) | dar در — дверь
+اِ | kasreh — краткое «е» (обычно не пишется) | del دل — сердце
+اُ | zammeh — краткое «о» (обычно не пишется) | moch مچ — запястье
+او ای آ | долгие гласные «у», «и», «â» | всегда пишутся: zood زود · si سی · âb آب
+ا د ذ ر ز ژ و | 7 букв, которые не соединяются с буквой слева | после них следующая буква пишется в начальной форме
+`,
+"Семья и люди": `
+pesar | сын; мальчик
+dokhtar | дочь; девочка
+pesaram | мой сын
+dokhtaram | моя дочь
+maman / madar | мама / мать
+baba / pedar | папа / отец
+mamanam | моя мама
+babam | мой папа
+khahar / abji | сестра | abji — разговорное
+baradar / dadash | брат | dadash — разговорное
+baba bozorg | дедушка
+madar bozorg | бабушка
+maman joon | мамочка
+famil | родня, семья
+hamsar | супруг(а): жена / муж
+khale | тётя (сестра мамы)
+daee | дядя (брат мамы)
+ameh | тётя (сестра папы)
+amu | дядя (брат папы)
+zan amu | жена дяди (по отцу)
+zan daee | жена дяди (по матери)
+shohar khale | муж тёти (по матери)
+shohar ame | муж тёти (по отцу)
+pesar amu / dokhtar amu | двоюродный брат / сестра (дети брата отца)
+pesar daee / dokhtar daee | двоюродный брат / сестра (дети брата матери)
+pesar khale / dokhtar khale | двоюродный брат / сестра (дети сестры матери)
+pesar ame / dokhtar ame | двоюродный брат / сестра (дети сестры отца)
+zan dadash | жена брата
+shohar khahar | муж сестры
+bache | ребёнок
+bacheha | дети
+mojarad | холостой / незамужняя
+motoahel | женат / замужем
+doost | друг
+doostha / doostan | друзья
+mehmun | гость
+mehmuni | вечеринка, гости
+adam | человек
+adama | люди
+ostad | учитель
+shagerd | ученик
+agha | господин
+khanoom | госпожа, дама
+`,
+"Приветствия и вежливость": `
+salam / doroud | привет, здравствуй
+khodahafez / bedroud | до свидания
+chetori? | как дела?
+man khoobam | у меня всё хорошо
+che khabar? | что нового?
+salamati | всё хорошо (ответ на «что нового?»)
+salam miresone | передаёт привет
+oza khoobe? | всё в порядке?
+shokr / khodaro shokr | слава Богу
+khoda | Бог
+merci / mamnun / tashakor | спасибо
+khahesh mikonam | пожалуйста (в ответ на спасибо)
+lotfan | пожалуйста (просьба)
+bi zahmat | будь добр, если не трудно
+afarin | молодец
+aali | отлично, прекрасно | в чате: awli
+azizam | мой дорогой, милый
+fadat besham | ласковое «жизнь за тебя отдам»
+ghorboonet beram | ласковое «я за тебя пожертвую собой»
+nooshe jan | приятного аппетита
+shab bekheir | спокойной ночи
+shabe khoobi dashte bashi | хорошей тебе ночи
+mibinamet | увидимся
+kheili zood mibinamet | очень скоро увидимся
+be omide didar | до встречи (надеюсь увидеться)
+moraghebe khodet bash | береги себя
+to ham hamintor | тебе тоже
+manam hamintor | я тоже
+be shoma khosh begzare | хорошо вам провести время
+khosh amadid | добро пожаловать
+be khooneye ma khosh oomadid | добро пожаловать к нам домой
+befarmaeed | прошу вас (проходите, угощайтесь)
+befarmaeed beshinid | садитесь, пожалуйста
+befarmaeed meil konid | угощайтесь, пожалуйста
+dar khedmatam | к вашим услугам
+naghabel | не стоит того (скромно о подарке)
+az didaret khoshhalam | приятно познакомиться
+khoshhalam mibinamet | рад тебя видеть
+bashe | хорошо, ладно
+areh | да
+na | нет
+lezat bordam | мне понравилось
+bad az man tekrar kon | повторяй за мной
+negah kon | смотри
+bezan berim | пойдём, поехали
+`,
+"Вопросы": `
+koja? | где? куда?
+key? / che zaman? | когда?
+chera? | почему?
+chetor? / che joori? | как?
+che? / chi? | что?
+ki? | кто?
+kodum? | который?
+chand? / chan ta? | сколько (штук)?
+che ghadr? | сколько (денег, объёма)?
+chi shod? | что случилось?
+esmet chie? | как тебя зовут?
+ahle kojaee? | откуда ты?
+chand saleteh? | сколько тебе лет?
+saat chande? | который час?
+emruz che tarikhie? | какое сегодня число?
+chan vaght be chan vaght? | как часто?
+chikara kardi? | что ты делал?
+hava chetore? | какая погода?
+che ghadr mishe? | сколько это стоит?
+baba koo? | где папа?
+shoma koja mirid? | куда вы едете?
+key be donya oumadi? | когда ты родился?
+sedamo dari? | ты меня слышишь?
+tasvir chetore? | как изображение (видно меня)?
+`,
+"Местоимения и маленькие слова": `
+man | я
+to | ты
+ou / oun | он, она
+ma | мы
+shoma | вы
+anha / ouna | они
+in | это
+oun / an | то
+inha | эти
+anha | те
+inja | здесь
+ounja | там
+injoori | вот так, таким образом
+ounjoori | тем способом
+hamamun | все мы
+mano | меня | babam mano doost dare — папа меня любит
+ba man / bam | со мной
+bat | с тобой
+bash | с ним / с ней
+bashun | с ними
+baraye | для
+baram / baraye man | для меня
+barat / baraye to | для тебя
+baramoon · baratoon · barashoon | для нас · для вас · для них
+va | и
+ya | или
+amma / vali | но
+chon | потому что
+age / agar | если
+pas / khob | итак, тогда
+shayad | может быть
+faghat | только
+ba | с
+be | к, в (предлог)
+az | из, от
+mesle | как, подобно
+bad / bad az | после
+ghabl / ghable | до, перед
+zamanike / vaghtike | когда (в предложении)
+dige | больше (не); ещё
+dobare / bazam | снова
+kheili | очень
+ziad | много
+kam kam | понемногу
+alan | сейчас
+hamin alan | прямо сейчас
+zood | скоро, быстро
+rajebe | о, про
+masalan | например
+mesal | пример
+mana | значение
+`,
+"Глаголы": `
+raftan | идти, ехать | miram · raftam · boro · naro (не иди)
+amadan | приходить | miam · bia (приходи)
+bordan | уносить, отвозить | mibaram · bordam · bebar
+avardan | приносить | miaram · ovordam · biar
+gereftan | брать | migiram · gereftam · begir
+yad gereftan | учить, изучать | yad migiram · yad gereftam
+harf zadan | говорить | harf mizanam · harf zadam · harf bezan
+sohbat kardan | разговаривать | sohbat mikonam
+goftan | сказать | migam · goftam · begu
+dadan | давать | midam (midaham) · bede
+dashtan | иметь | daram · dashtam
+doost dashtan | любить, нравиться | doost daram · doost dashtam
+boodan | быть | hastam · boodam · nistam (не являюсь)
+balad boodan | знать, уметь | baladam · balad nistam
+khastan | хотеть | mikham · khastam
+tunestan | мочь | mitunam · tunestam · nemitunestam
+porsidan | спрашивать | miporsam · bepors
+baz kardan | открывать | baz mikonam · baz kardam
+bastan | закрывать | mibandam · beband
+shodan | становиться | misham · shodam
+piade shodan | выходить (из транспорта) | piade misham
+residan | доехать, прибыть | miresam · residam
+khordan | есть, пить | mikhoram · khordam · bokhor · nakhor
+neshastan | сидеть, садиться | mishinam · neshastam · beshin
+pa shodan | вставать | pamisham · pasho (встань)
+bidar shodan | просыпаться | bidar misham
+amade shodan | собираться, готовиться | amade misham
+motovajeh shodan | понимать | motovajeh misham · motovajeh shodam
+tekrar kardan | повторять | tekrar mikonam · tekrar kardam
+kar kardan | работать | kar mikonam · kar kardam · kar nakardam
+kar dashtan | быть занятым | man kar daram — я занят
+davat kardan | приглашать | davat mikonam · davat kardam · davat kon
+komak kardan | помогать | komak mikonam · komak kardam
+dars khundan | учиться, делать уроки | mikham dars bekhunam
+motalee kardan | читать, заниматься
+khundan | петь; читать | mituni bekhuni? — умеешь петь?
+raghsidan | танцевать | mituni beraghsi?
+ashpazi kardan | готовить еду | ashpazi mikonam · ghaza mipazam
+ranandegi kardan | водить машину | ranandegi mikonam
+goosh kardan | слушать
+kharid kardan | делать покупки | kharid mikonam
+shena kardan | плавать | shena mikonam
+docharkhe savari kardan | кататься на велосипеде
+motor savari kardan | ездить на мотоцикле
+asb savari kardan | ездить верхом на лошади
+shotor savari kardan | ездить на верблюде
+mundan | оставаться | mimunam · khune mimunam
+fekr kardan | думать | fekr mikonam
+didan | видеть; встречаться | mibinam · didam
+molaghat kardan | встречаться с кем-то | molaghat mikonam
+ferestadan | отправлять | mifrestam · ferestadam · befrestam
+bazi kardan | играть | bazi mikonam
+naghashi kardan | рисовать
+tamam kardan | заканчивать | tamam mikonam · tamam kardam
+tamrin kardan | практиковаться | farsi tamrin mikonam
+akasi kardan | фотографировать | akasi mikonam · akasi kardam
+varzesh kardan | заниматься спортом | varzesh mikonam · varzesh kardam
+khabidan | спать | mikhabam · khabidam
+sigar keshidan | курить | sigar mikesham
+piano zadan | играть на пианино | piano mizanam
+mesvak zadan | чистить зубы | dandunamo mesvak mizanam
+doosh gereftan | принимать душ | doosh migiram · doosh gereftam · doosh begir
+rooshan kardan | включать | rooshan mikonam
+khamoosh kardan | выключать | khamoosh mikonam
+pooshidan | надевать, носить | miposham · pooshidam · bepoosh
+avaz kardan | менять | lebasamo avaz mikonam — переодеваюсь
+shostan | мыть | zarfaro mishoori? — моешь посуду?
+safar raftan / mosaferat kardan | путешествовать
+zendegi kardan | жить | dar Ashgabat zendegi mikonam
+omidvar boodan | надеяться | omidvaram
+tars dashtan | бояться | tars daram
+barghashtan | возвращаться | key barmigardi khune?
+negah dashtan | хранить, держать | negah midaram
+pishnehad kardan | предлагать | pishnehad mikonam
+niaz dashtan | нуждаться | niaz daram
+tabdil kardan | обменивать | dollar tabdil konam
+hesab kardan | подсчитывать
+gashtan | гулять, бродить | charkh zadan tuye internet — сидеть в интернете
+lezat bordan | получать удовольствие
+tazrigh kardan / ampul zadan | сделать укол
+kutah kardan | укорачивать | muhamo kutah kardam — я подстригся
+bayad | надо, должен | bayad beram — мне надо идти
+gharare | собираться (сделать) | gharare komak bekonam — я собираюсь помочь
+`,
+"Время": `
+rooz | день
+shab | ночь
+sobh | утро
+zohr | полдень
+bad az zohr | после полудня
+asr | вечер
+emrooz | сегодня
+dirooz | вчера
+farda | завтра
+emshab | сегодня вечером
+dishab | вчера вечером
+farda shab | завтра вечером
+hafteh | неделя
+mah | месяц
+sal | год
+sale no | Новый год
+in hafteh · hafte pish · hafte dige | эта неделя · прошлая · следующая
+in mah · mahe pish · mahe dige | этот месяц · прошлый · следующий
+emsal · parsal · sale dige | в этом году · в прошлом · в следующем
+fasl | время года
+bahar | весна | Farvardin, Ordibehesht, Khordad
+tabestun | лето | Tir, Mordad, Shahrivar
+paeez | осень | Mehr, Aban, Azar
+zemestun | зима | Dey, Bahman, Esfand
+shanbe | суббота
+yek shanbe | воскресенье
+do shanbe | понедельник
+se shanbe | вторник
+char shanbe | среда
+panj shanbe | четверг
+jome | пятница
+saat | час; часы
+daghighe | минута
+sanieh | секунда
+rob | четверть (15 минут)
+nim | половина (30 минут)
+ye rob be haft | без четверти семь
+zaman / vaght | время
+tarikh | дата
+hamishe | всегда
+mamulan | обычно
+aghlab | часто
+bazi vaghta | иногда
+be nodrat / kheili kam | редко
+hargez / hich vaght | никогда
+mesle hamishe | как всегда
+har rooz | каждый день
+har sob | каждое утро
+har shab | каждый вечер
+har hafteh | каждую неделю
+har mah | каждый месяц
+har sal | каждый год
+ye bar dar rooz | раз в день
+do bar dar rooz | два раза в день
+se bar dar mah | три раза в месяц
+ye bar dar hafteh | раз в неделю
+`,
+"Месяцы": `
+Farvardin | 1-й месяц (март–апрель)
+Ordibehesht | 2-й месяц (апрель–май)
+Khordad | 3-й месяц (май–июнь)
+Tir | 4-й месяц (июнь–июль)
+Mordad | 5-й месяц (июль–август)
+Shahrivar | 6-й месяц (август–сентябрь)
+Mehr | 7-й месяц (сентябрь–октябрь)
+Aban | 8-й месяц (октябрь–ноябрь)
+Azar | 9-й месяц (ноябрь–декабрь)
+Dey | 10-й месяц (декабрь–январь)
+Bahman | 11-й месяц (январь–февраль)
+Esfand | 12-й месяц (февраль–март)
+`,
+"Числа": `
+sefr / hich | 0
+yek / ye | 1
+do | 2
+se | 3
+chahar / char | 4
+panj | 5
+shish | 6
+haft | 7
+hasht | 8
+noh | 9
+dah | 10
+yazdah | 11
+davazdah | 12
+sizdah | 13
+chahardah | 14
+punzdah | 15
+shunzdah | 16
+hevdah | 17
+hejdah | 18
+nuzdah | 19
+bist | 20
+bisto yek | 21
+si | 30
+chehel | 40
+panjah | 50
+shast | 60
+haftad | 70
+hashtad | 80
+navad | 90
+sad | 100
+divist | 200
+sisad | 300
+charsad | 400
+punsad | 500
+shishsad | 600
+haftsad | 700
+hashtsad | 800
+nohsad | 900
+hezar | 1000
+aval / yekom | первый
+dovom | второй
+sevom | третий
+chaharom | четвёртый
+panjom | пятый
+shishom | шестой
+daho panj daghighe | 10:05
+`,
+"Еда": `
+ab | вода
+ghaza | еда
+sobhane | завтрак
+nahar | обед
+sham | ужин
+tokhme morgh | яйцо
+morgh | курица
+torshi | соленья
+ajil | орехи
+fenjun | чашка
+zarf / zarfa | тарелка / посуда
+maze | вкус
+khoshmaze | вкусный
+shur | солёный
+shirin | сладкий
+torsh | кислый
+talkh | горький
+sir | сытый
+goshne / gorosne | голодный
+`,
+"Прилагательные": `
+khoob | хороший
+bozorg · bozorgtar | большой · больше; старше
+kuchik · kuchiktar | маленький · меньше
+arzoon | дешёвый
+geroon | дорогой
+asoon | лёгкий (простой)
+sakht | трудный
+tamiz | чистый
+kasif | грязный
+sangin | тяжёлый
+sabok | лёгкий (по весу)
+boland | высокий, длинный
+kootah | короткий, низкий
+tarik | тёмный
+rooshan | светлый
+chagh | толстый
+laghar | худой
+ziba / khoshgel | красивый
+zesht | некрасивый
+shulugh | шумный
+aroom / khalvat | тихий
+sard | холодный
+garm | тёплый
+dagh | горячий
+khonak | прохладный
+khis | мокрый
+khoshk | сухой
+zakhim | толстый (о книге)
+nazok | тонкий
+khoshhal / shad | счастливый, радостный
+narahat | расстроенный
+mehrban | добрый
+namehrban | недобрый
+no / jadid | новый
+ghadimi | старый
+khareji | иностранный
+ba hoosh | умный
+khaste | уставший
+rahat | удобный
+asabani | злой, раздражённый
+mashghool / dargir | занятой
+behtar · badtar | лучше · хуже
+baruni | дождливый
+mehi | туманный
+sefat | прилагательные
+`,
+"Вещи и места": `
+khane / khune | дом
+hayat | двор
+otagh | комната
+dar | дверь
+khiabun | улица; бульвар
+shahr | город
+kuh | гора
+keshvar / keshvara | страна / страны
+donya | мир
+amoozeshgah | курсы, учебный центр
+sare kar | на работе
+mashin | машина
+ketab | книга
+daftar | тетрадь
+medad | карандаш
+khodkar | ручка
+pak kon | ластик
+kif | сумка
+saat | часы
+kolah | шапка
+lebas / lebasa | одежда
+kado | подарок
+pool | деньги
+gheymat | цена
+chiz / chiza | вещь / вещи
+abzar | инструменты
+pich gushti | отвёртка
+cheragh | лампа, свет
+dandun / danduna | зуб / зубы
+musighi | музыка
+bazi / baziha | игра / игры
+bazihaye computeri | компьютерные игры
+barname | план
+zendegi | жизнь
+kar | работа; дело
+eshgh | любовь
+tars | страх
+dard | боль
+esm | имя
+famil | фамилия
+an'am | чаевые
+seda | голос, звук
+tasvir | изображение
+hava | погода; воздух
+barun | дождь
+gorbe | кошка
+sag | собака
+khar | осёл
+gav | корова
+asb | лошадь
+shotor | верблюд
+shomal | север
+jonub | юг
+gharb | запад
+shargh | восток
+sarafi | обменник
+nerkh | курс, ставка
+nerkhe tabdil | обменный курс
+tablo | табло
+hesabe pas andaz | сберегательный счёт
+hesabe jari | текущий счёт
+moasherat | общение
+profile shakhsi | личный профиль
+`,
+"Грамматика": `
+-am · -i · -e · -im · -id · -an | окончания глагола: я · ты · он · мы · вы · они | mikonam, mikoni, mikone, mikonim, mikonid, mikonan
+mi- + глагол | настоящее время | mi + kon + am = mikonam (я делаю)
+be- + глагол | «чтобы…» и повелительное | mikham beram — хочу пойти · boro — иди
+ne- / na- | отрицание | miram → nemiram · kardam → nakardam
+daram + глагол | сейчас делаю (как -ing) | man daram sham mikhoram — я сейчас ужинаю
+dashtam + mi-… | делал в тот момент | man dashtam sham mikhordam — я ужинал
+hastam · hasti · hast · hastim · hastid · hastan | я есть · ты · он · мы · вы · они (быть)
+nistam · nisti · nist · nistim · nistid · nistan | я не · ты не · он не… (не быть)
+boodam · boodi · bood · boodim · boodid · boodan | я был · ты был… (прошедшее «быть»)
+-am · -et · -esh | мой · твой · его/её | esmam, esmet, esmesh · barnamam, barnamat, barnamash
+-emun · -etun · -eshun | наш · ваш · их | barnamamun, barnamatun, barnamashun
+-tar | сравнительная степень | bozorg → bozorgtar (больше)
+ra / ro / -o | показатель прямого дополнения | daro baz mikonam — открываю дверь
+-ha / -a | множественное число | doost → doostha · chiz → chiza
+`,
+"Фразы": `
+Man farsi harf mizanam | Я говорю на фарси
+Man daram farsi yad migiram | Я сейчас учу фарси
+Man mitunam farsi harf bezanam | Я могу говорить на фарси
+Man turkman hastam | Я туркмен
+Bisto do salame | Мне 22 года
+Esmam Rejepe | Меня зовут Реджеп
+Maro bebarid be hotel Homa | Отвезите нас в отель «Хома»
+Man mikham taxi begiram | Я хочу взять такси
+Man taxi gereftam | Я взял такси
+Bia inja lotfan | Иди сюда, пожалуйста
+Boro ounja lotfan | Иди туда, пожалуйста
+Harf bezan ba man lotfan | Поговори со мной, пожалуйста
+Mishe lotfan daro baz koni? | Можешь, пожалуйста, открыть дверь?
+Mishe bi zahmat ab biari? | Принеси, пожалуйста, воды
+Pool bede be man | Дай мне денег
+Che ghadr taghdim konam? | Сколько я вам должен? (вежливо)
+Man mikham dollar tabdil konam | Я хочу обменять доллары
+Baraye che kari mikhaid? | Для чего вам это нужно?
+Man pool daram | У меня есть деньги
+Man ye khahar daram | У меня одна сестра
+Dadash nadaram | У меня нет брата
+Babat mashin dare? | У твоего папы есть машина?
+Man mikham biam be khoonat | Я хочу прийти к тебе домой
+Man saate 7 bidar misham | Я просыпаюсь в 7 часов
+Saate chand sobhane mikhori? | Во сколько ты завтракаешь?
+Saat yazdah | Сейчас 11 часов
+Emrooz che karaee kardi? | Что ты сегодня делал?
+Emrooz khooneye amum boodam | Сегодня я был у дяди
+Hava baruni bood | Была дождливая погода
+Kodum bozorgtare? | Какой больше?
+Istanbul bozorgtare az Ashgabat | Стамбул больше Ашхабада
+Babam dige fast food nemikhore | Папа больше не ест фастфуд
+Man ye bar dar rooz doosh migiram | Я принимаю душ раз в день
+Man mikham keshvaraye ziadi ro bebinam | Я хочу увидеть много стран
+Man mikham shahro bebinam | Я хочу посмотреть город
+Man migam dooset daram | Я говорю, что люблю тебя
+Man omidvaram doost dashte bashi | Надеюсь, тебе понравится
+Inha maman babaye mane | Это мои родители
+Faghat zood biaid | Только приходите скорее
+Delam barat tang shodeh bood | Я по тебе скучал(а) | букв. «моё сердце стало тесным для тебя»
+Be mamano baba salam beresonid | Передай привет маме и папе
+Mitoonam inja park konam? | Можно здесь припарковаться?
+Pas koja beram? | Тогда куда мне ехать?
+Emrooz mikham bazar ra bebinam | Сегодня я хочу посмотреть базар
+Chand rooz Tehran mimoonim? | Сколько дней мы будем в Тегеране?
+Fekr mikonam bahar behtar basheh | Думаю, весной будет лучше
+Shiraz ra ham kheili doost daram bebinam | Я очень хочу увидеть и Шираз
+Agar sobhanat tamam shod, berim | Если закончил завтракать, пойдём
+Bad az Esfahan be Shiraz mirim | После Исфахана поедем в Шираз
+Mikhaham poolemoon ra negahdari konim | Мы хотим хранить деньги (в банке)
+Bebakhshid agha, mikhaham dollar tabdil konam | Извините, я хочу обменять доллары
+`,
+"Предложения из учебника": `
+Salam, hale shoma khoob ast? | Здравствуйте, как вы?
+Baba koo? Farzad kojast? | Где папа? Где Фарзад?
+Anha daran mian | Они уже идут
+Areh, farsi harf mizaneh | Да, она говорит на фарси
+Dokhtarat khoobeh? | Твоя дочь в порядке?
+Hale maman o babat khoobeh? | Как твои мама и папа?
+Agha, in taxi khalieh? | Господин, это такси свободно?
+Baleh khanoom, biaeed bala | Да, госпожа, садитесь
+Sara jan, to dar ra baz kon | Сара, открой дверь
+Maman, man dastam bandeh | Мама, у меня руки заняты
+Shoma koja mirid? | Куда вы едете?
+Befarmaeed, ghabel nadareh | Пожалуйста, не стоит (денег)
+Mikham beram hotel Homa | Я хочу поехать в отель «Хома»
+Mikhaid taxi begirid? | Вы хотите взять такси?
+Koja mikhai berim? | Куда ты хочешь, чтобы мы пошли?
+Mikhan tanha bashan | Они хотят побыть одни
+Residid hotel? | Вы доехали до отеля?
+Areh, hamin alan residim | Да, мы только что приехали
+Na, hanooz naresidim | Нет, мы ещё не доехали
+Bekhoda nabayad miraftid hotel | Ей-богу, не надо было ехать в отель
+Injoori hamamoon rahat-tarim | Так нам всем удобнее
+Mikhaim baraye sham mozahemetoon beshim | Мы хотим прийти к вам на ужин
+Barnamatoon baraye farda chieh? | Какие у вас планы на завтра?
+Mikhai machine babato dashteh bashi? | Хочешь взять папину машину?
+Na, ye ajance migirim | Нет, мы вызовем такси
+Mikhaid farda ba ham sham bekhorim? | Хотите завтра поужинать вместе?
+Baleh, kheili doost daram | Да, очень хочу
+Mikhai barat ye taxi begiram? | Вызвать тебе такси?
+Areh, baram ye taxi begir | Да, вызови мне такси
+Na negaran nabash. Faghat zood biaeed | Не волнуйся. Только приходите пораньше
+Khodafez ta farda | До свидания, до завтра
+Shayad doshanbeh behtar basheh | Может быть, в понедельник лучше
+Avval bayad famil ro bebinim | Сначала нужно навестить родных
+Fekr konam yek hafteh khoobe | Думаю, неделя будет в самый раз
+Chon tabestaneh, avval berim shomal | Раз сейчас лето, сначала поедем на север
+Emshab az mamanesh miporsim | Сегодня вечером спросим у её мамы
+Che fasli baraye didane Esfahan khoobe? | Какое время года лучше для поездки в Исфахан?
+Maman to gofti ke mitoonim berim kooh | Мама, ты говорила, что мы можем поехать в горы
+Areh, shayad jomeh berim Tochal | Да, может, в пятницу поедем на Точал
+Areh baba, berim shahr ra bebinim | Да, папа, пойдём посмотрим город
+Maman, khoreshtet kheili khoshmazeh shodeh | Мама, твоё рагу получилось очень вкусным
+Nooshe jan dokhtaram. Bazam bekesh | Приятного аппетита, дочка. Положи ещё
+Aghaye Daniel befarmaeed kabab | Господин Даниэль, угощайтесь кебабом
+Merci pedar jan, kheili khordam | Спасибо, папа, я уже много съел
+Digeh nemikham. Siir shodam | Больше не хочу. Я наелся
+Yek chizhaye naghabeli baratoon avordim | Мы привезли вам скромные подарки
+Nemikhast zahmat bekeshid | Не стоило беспокоиться
+Maman in lebas ra bepoosh | Мама, надень это платье
+Omidvaram ke doost dashteh bashi | Надеюсь, тебе понравится
+Beram ajil biaram saremoon garm besheh | Пойду принесу орешков, чтобы было чем заняться
+Dastetoon dard nakoneh, che ghazaye khoshmazei! | Спасибо, какая вкусная еда!
+Khahesh mikonam, taarof nakonid | Прошу вас, не церемоньтесь
+Befarmaeed inja beshinid | Садитесь здесь, пожалуйста
+Daniel, inja dame bank beist | Даниэль, остановись здесь, у банка
+Chi ehtiaj dari? | Что тебе нужно?
+Bayad kami az poolemoon ra tabdil konim | Нам нужно обменять немного денег
+Inja tavaghghof mamnooeh | Здесь стоянка запрещена
+Yek kami jolotar parkinge omoomi hast | Чуть дальше есть общественная парковка
+Bayad berim baje moamelate arzi | Нужно пойти к окошку обмена валюты
+Nerkhe rooze dolar rooye tablo elam shodeh | Курс доллара на сегодня указан на табло
+Hesab konid, cheghadr ehtiaj darid | Посчитайте, сколько вам нужно
+Mitavanim yek hesabe jari ham baz konim? | Можем мы ещё открыть текущий счёт?
+Pishnahad mikonam pasandaz baz konid | Советую открыть сберегательный счёт
+Basheh, hamin kar ra mikonim | Хорошо, так и сделаем
+`,
+"Предложения: упражнения": `
+Man mikham beram | Я хочу пойти | перевод мой — сверь с учителем
+Man mikhastam beram | Я хотел пойти | перевод мой — сверь с учителем
+Shayad beram | Может быть, я пойду | из чата
+Bayad beram | Мне надо идти | из чата
+Mitunam beram | Я могу пойти | из чата
+Ma mitunim berim | Мы можем пойти | перевод мой — сверь с учителем
+Man mikham inja beshinam | Я хочу сесть здесь | перевод мой — сверь с учителем
+Mikhai inja beshini? | Хочешь сесть здесь? | перевод мой — сверь с учителем
+To kar kardi | Ты работал | перевод мой — сверь с учителем
+Babam kar nemikone | Мой папа не работает | перевод мой — сверь с учителем
+Babat dige kar nemikone | Твой папа больше не работает | перевод мой — сверь с учителем
+Man mikhastam taxi begiram | Я хотел взять такси | перевод мой — сверь с учителем
+Man mikham to ro baraye sham davat konam | Я хочу пригласить тебя на ужин | перевод мой — сверь с учителем
+Oo mikhast daro baz kone | Она хотела открыть дверь | перевод мой — сверь с учителем
+Anha mikhan kar konan | Они хотят работать | перевод мой — сверь с учителем
+Man mikham farsi yad begiram | Я хочу выучить фарси | перевод мой — сверь с учителем
+Motovajeh mishi? | Ты понимаешь? | перевод мой — сверь с учителем
+Motovajeh shodi? | Ты понял? | перевод мой — сверь с учителем
+Man mikham dandunamo mesvak bezanam | Я хочу почистить зубы | перевод мой — сверь с учителем
+Man bayad dandunamo mesvak bezanam | Мне нужно почистить зубы | перевод мой — сверь с учителем
+Man daram doosh migiram | Я сейчас принимаю душ | перевод мой — сверь с учителем
+Man doosh gereftam | Я принял душ | из чата
+Man dashtam doosh migereftam | Я принимал душ (в тот момент) | перевод мой — сверь с учителем
+Man daram komak mikonam | Я сейчас помогаю | перевод мой — сверь с учителем
+Man dashtam komak mikardam | Я помогал (в тот момент) | перевод мой — сверь с учителем
+Man mikham komak konam | Я хочу помочь | перевод мой — сверь с учителем
+Man bayad komak konam | Я должен помочь | перевод мой — сверь с учителем
+To gharare komak koni | Ты собираешься помочь | перевод мой — сверь с учителем
+Man gharare farsi yad begiram | Я собираюсь выучить фарси | перевод мой — сверь с учителем
+Khaharam gharare bere Chin | Моя сестра собирается поехать в Китай | перевод мой — сверь с учителем
+Mamanam gharare sham bokhore | Моя мама собирается поужинать | перевод мой — сверь с учителем
+Babam gharare doostesho davat kone | Мой папа собирается пригласить друга | перевод мой — сверь с учителем
+Man gharare farda kheili sakht kar konam | Завтра я собираюсь очень много работать | перевод мой — сверь с учителем
+Man gharare be zoodi kheili khoob farsi harf bezanam | Скоро я буду очень хорошо говорить на фарси | перевод мой — сверь с учителем
+Ma gharare baraye mehmuni amade beshim | Мы собираемся готовиться к вечеринке | перевод мой — сверь с учителем
+Ma gharare emshab mobilamuno check konim | Сегодня вечером мы собираемся проверить телефоны | перевод мой — сверь с учителем
+Vaghti se salam bood mitunestam harf bezanam | Я умел говорить, когда мне было 3 года | перевод мой — сверь с учителем
+Baradaram vaghti panj salesh bood mitunest docharkhe savari kone | Мой брат умел кататься на велосипеде в 5 лет | перевод мой — сверь с учителем
+Khaharam vaghti dah salesh bood mitunest piano bezane | Моя сестра умела играть на пианино в 10 лет | перевод мой — сверь с учителем
+Mamanet vaghti chahardah salesh bood mitunest ashpazi kone? | Твоя мама умела готовить в 14 лет? | перевод мой — сверь с учителем
+Ma vaghti davazdah salemun bood nemitunestim ranandegi konim | В 12 лет мы не умели водить машину | перевод мой — сверь с учителем
+Vaghti nuzdah salam bood nemitunestam farsi harf bezanam, vali alan ye kam mitunam | В 19 лет я не говорил на фарси, а сейчас немного могу | перевод мой — сверь с учителем
+Man hamishe musighi goosh mikonam | Я всегда слушаю музыку | перевод мой — сверь с учителем
+Babam hamishe turkmani harf mizane | Мой папа всегда говорит по-туркменски | перевод мой — сверь с учителем
+Mamanam hamishe ghazaye khoshmaze mipaze | Моя мама всегда готовит вкусную еду | перевод мой — сверь с учителем
+Man mamulan sare kelas mikhabam | Я обычно сплю на уроке | перевод мой — сверь с учителем
+Man hargez sigar nemikesham | Я никогда не курю | перевод мой — сверь с учителем
+Man be nodrat miraghsam | Я редко танцую | перевод мой — сверь с учителем
+Man cinema raftam | Я сходил в кино | перевод мой — сверь с учителем
+Man daram miram cinema | Я сейчас иду в кино | перевод мой — сверь с учителем
+Man daram TV mibinam | Я сейчас смотрю телевизор | перевод мой — сверь с учителем
+Man doostamo didam | Я встретился с друзьями | перевод мой — сверь с учителем
+Man dige docharkhe savari nemikonam | Я больше не катаюсь на велосипеде | перевод мой — сверь с учителем
+Mamanam dige ashpazi nemikone | Моя мама больше не готовит | перевод мой — сверь с учителем
+Ma dige khoonaro tamiz nemikonim | Мы больше не убираем дом | перевод мой — сверь с учителем
+To dige engilisi harf nemizani | Ты больше не говоришь по-английски | перевод мой — сверь с учителем
+Mishe lotfan daro bebandi? | Можешь, пожалуйста, закрыть дверь? | перевод мой — сверь с учителем
+Mishe lotfan TV ro rooshan koni? | Можешь, пожалуйста, включить телевизор? | перевод мой — сверь с учителем
+Mishe lotfan bam harf bezani? | Можешь, пожалуйста, поговорить со мной? | перевод мой — сверь с учителем
+Mishe lotfan cheragharo khamoosh koni? | Можешь, пожалуйста, выключить свет? | из чата
+Babat chand saleshe? | Сколько лет твоему папе? | из чата
+Mamanet docharkhe dare? | У твоей мамы есть велосипед? | перевод мой — сверь с учителем
+Man mikham beram kharid | Я хочу пойти за покупками | перевод мой — сверь с учителем
+Mikhai biai khoonam? | Хочешь прийти ко мне домой? | перевод мой — сверь с учителем
+Man Ashgabat ro didam | Я побывал в Ашхабаде | перевод мой — сверь с учителем
+Man daram fekr mikonam | Я сейчас думаю | перевод мой — сверь с учителем
+Man doost daram shahro bebinam | Мне хочется посмотреть город | перевод мой — сверь с учителем
+Ketab sangintare az kaghaz | Книга тяжелее бумаги | перевод мой — сверь с учителем
+Laptop geroontare az T-shirt | Ноутбук дороже футболки | перевод мой — сверь с учителем
+Man boland-taram az khaharam | Я выше своей сестры | перевод мой — сверь с учителем
+Dey sardtare az Tir | Декабрь холоднее июня | перевод мой — сверь с учителем
+Man akasi kardam baraye khaharam | Я фотографировал для сестры | из чата
+`,
+"Из учебника": `
+jan / joon | дорогой, милый; душа | добавляют к имени: Sara jan
+del | сердце
+baleh | да (вежливо)
+chashm | глаз; «хорошо, сделаю» | ответ на просьбу старшего
+ghadametoon rooyeh cheshm | милости просим | букв. «ваши шаги на моих глазах»
+mozahemetoon beshim | побеспокоить вас (прийти в гости)
+zahmat | хлопоты, беспокойство
+zahmat nandaz | не утруждайся
+nemikhast zahmat bekeshid | не стоило беспокоиться
+negaran nabash | не волнуйся
+ta farda | до завтра
+bekhoda | ей-богу, клянусь
+akheh | но ведь
+hanooz | ещё (не) | hanooz naresidim — мы ещё не доехали
+beharhal | в любом случае
+tazeh | только что; к тому же
+tanha | один, в одиночестве
+taarof | тароф: вежливые церемонии
+taarof nakonid | не церемоньтесь
+dastet dard nakoneh | спасибо за труды | букв. «пусть твоя рука не болит»
+ghorboone dastet | спасибо тебе (ласково)
+halet khoobeh? | как ты?
+bacheha chetorand? | как дети?
+befarmaeed too | проходите, пожалуйста
+khedmate shoma | вот, пожалуйста (держите)
+bebakhshid | извините
+ghabel nadare | не стоит (благодарности)
+taghdim kardan | преподносить, предлагать
+khali | пустой, свободный | in taxi khalieh? — это такси свободно?
+dastam bandeh | у меня руки заняты
+biaeed bala | садитесь (в машину)
+anam bedam? | дать чаевые?
+hamlo naghl | транспорт
+mosafer / mosaferan | пассажир / пассажиры
+kerayeh | плата за проезд
+mostaghim | прямо, напрямую
+toman / rial | туман / риал (деньги Ирана) | 1 туман = 10 риалов
+ajance | такси-агентство
+mokalemeh telefoni | телефонный разговор
+bazar | базар
+tabiat | природа
+farhang | культура
+Norooz | Новруз, иранский Новый год
+khaneh tekani | генеральная уборка перед Новрузом
+sofreh | скатерть (для еды)
+sofreh haftsin | новогодний стол «семь С»
+sizdah bedar | 13-й день Новруза (пикник на природе)
+did o bazdid | визиты к родным
+adabe sofreh | застольный этикет
+soghati | сувенир
+kadou | подарок
+khoresht | рагу
+kabab | кебаб
+bazam bekesh | положи ещё
+siir shodam | я наелся
+yek chizi bekhor | съешь что-нибудь
+noon / nan | хлеб
+doogh | дуг (кисломолочный напиток)
+berenj | рис
+nana | мята
+reyhan | базилик
+sabzi khordan | свежая зелень к столу
+shirini | сладости
+shekar | сахар
+namak | соль
+shir | молоко
+farsh | ковёр
+barakat | благодать, изобилие
+lab | губы
+ghalb | сердце
+gol | цветок
+hes | чувство
+ja | место
+taj | корона
+kachal | лысый
+moch | запястье
+parch | кувшин
+sahar | рассвет
+sharh | описание
+mikh | гвоздь
+shakh | рог
+yas | жасмин
+pari | фея
+bad | плохой
+bazr | семя
+zehn | ум
+mard | мужчина
+mozd | зарплата
+mozheh | ресница
+zhaleh | роса
+kam | мало
+khook | свинья
+jegar | печень
+marg | смерть
+boos | поцелуй
+tab | качели
+par | перо
+separ | щит
+chap | левый
+toop | мяч
+tar | мокрый
+soot | свисток
+servat | богатство
+tond | быстрый
+sen | возраст
+jashn | праздник
+rish | борода
+koodak | ребёнок
+badan | тело
+ehteram | уважение
+tejarat | торговля
+bankdar | кассир в банке
+ehtiaj | нужда | ehtiaj darid — вам нужно
+moamelate arzi | обмен валюты
+tavaghghof mamnooeh | стоянка запрещена
+jolotar | чуть дальше
+parking omoomi | общественная парковка
+`
+};
+
+const CARDS=[];
+for(const [topic,block] of Object.entries(RAW)){
+  block.trim().split("\n").forEach(line=>{
+    const [f,r,n]=line.split("|").map(s=>s&&s.trim());
+    if(f&&r) CARDS.push({id:topic+"::"+f,f,r,n:n||"",t:topic});
+  });
+}
+const TOPICS=Object.keys(RAW);
+
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let known=new Set(LS.get("fa-known",[]));
+let topic=LS.get("fa-topic","all");
+let dir=LS.get("fa-dir","fa");
+let showKnown=false;
+let deck=[],pos=0;
+const $=id=>document.getElementById(id);
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pool(){return CARDS.filter(c=>(topic==="all"||c.t===topic))}
+function build(doShuffle){
+  deck=pool().filter(c=>showKnown||!known.has(c.id));
+  if(doShuffle) shuffle(deck);
+  pos=0; render();
+}
+function renderChips(){
+  const all=[["all","Все",CARDS.length],...TOPICS.map(t=>[t,t,CARDS.filter(c=>c.t===t).length])];
+  $("chips").innerHTML=all.map(([k,l,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===topic}">${l}<small>${n}</small></button>`).join("");
+}
+function render(){
+  $("card").classList.remove("flipped");
+  const p=pool(), k=p.filter(c=>known.has(c.id)).length;
+  $("sTotal").textContent=CARDS.length; $("sKnown").textContent=known.size;
+  $("bar").style.width=(p.length?k/p.length*100:0)+"%";
+  const empty=!deck.length;
+  $("study").hidden=empty; $("done").hidden=!empty;
+  if(empty) return;
+  const c=deck[pos%deck.length];
+  const front=dir==="fa"?{w:c.f,n:""}:{w:c.r,n:""};
+  const back=dir==="fa"?{w:c.r,n:c.n}:{w:c.f,n:c.n};
+  // при обратном направлении задерживаем смену задней стороны, чтобы ответ не мелькал
+  const isScript=w=>/^[؀-ۿ\s]+$/.test(w);
+  $("wF").textContent=front.w; $("nF").textContent=front.n; $("wF").classList.toggle("script",isScript(front.w)); $("wF").classList.toggle("long",front.w.length>34);
+  setTimeout(()=>{ $("wB").textContent=back.w; $("nB").textContent=back.n; $("wB").classList.toggle("script",isScript(back.w)); $("wB").classList.toggle("long",back.w.length>34); },160);
+  const tag=c.t+(known.has(c.id)?" · выучено":"");
+  $("tagF").textContent=$("tagB").textContent=tag;
+  $("countF").textContent=$("countB").textContent=`${(pos%deck.length)+1} / ${deck.length}`;
+}
+function flip(){$("card").classList.toggle("flipped")}
+function answer(ok){
+  if(!deck.length) return;
+  const c=deck[pos%deck.length];
+  if(ok){known.add(c.id); LS.set("fa-known",[...known]);
+    if(!showKnown){deck.splice(pos%deck.length,1); if(deck.length) pos=pos%deck.length; render(); renderList(); return;}
+  } else {
+    // «повторить»: карточка вернётся через несколько позиций
+    deck.splice(pos%deck.length,1); const at=Math.min(deck.length,(pos%Math.max(deck.length,1))+4); deck.splice(at,0,c);
+    known.delete(c.id); LS.set("fa-known",[...known]);
+    render(); renderList(); return;
+  }
+  pos++; render(); renderList();
+}
+function esc(s){return s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}
+function renderList(){
+  const q=$("q").value.trim().toLowerCase();
+  let html="";
+  for(const t of TOPICS){
+    const rows=CARDS.filter(c=>c.t===t&&(!q||(c.f+" "+c.r+" "+c.n).toLowerCase().includes(q)));
+    if(!rows.length) continue;
+    html+=`<tr class="topic"><td colspan="3">${esc(t)} · ${rows.length}</td></tr>`;
+    html+=rows.map(c=>`<tr><td${/^[؀-ۿ\s]+$/.test(c.f)?' class="sc"':''}>${esc(c.f)}</td><td>${esc(c.r)}${c.n?`<small>${esc(c.n)}</small>`:""}</td><td class="k">${known.has(c.id)?"✓":""}</td></tr>`).join("");
+  }
+  $("tbl").innerHTML=html||`<tr><td colspan="3">Ничего не найдено. Попробуй другое слово.</td></tr>`;
+}
+function setDir(d){dir=d;LS.set("fa-dir",d);$("dirFa").setAttribute("aria-pressed",d==="fa");$("dirRu").setAttribute("aria-pressed",d==="ru");render()}
+
+$("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;topic=b.dataset.k;LS.set("fa-topic",topic);renderChips();build(true)});
+$("card").addEventListener("click",flip);
+$("card").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();flip()}});
+$("know").addEventListener("click",()=>answer(true));
+$("again").addEventListener("click",()=>answer(false));
+$("shuffle").addEventListener("click",()=>build(true));
+$("restart").addEventListener("click",()=>{pool().forEach(c=>known.delete(c.id));LS.set("fa-known",[...known]);build(true);renderList()});
+$("reset").addEventListener("click",function(){
+  if(this.dataset.armed){known=new Set();LS.set("fa-known",[]);delete this.dataset.armed;this.textContent="Сбросить прогресс";build(true);renderList();}
+  else{this.dataset.armed="1";this.textContent="Точно сбросить?";setTimeout(()=>{delete this.dataset.armed;this.textContent="Сбросить прогресс"},3000)}
+});
+$("showKnown").addEventListener("change",e=>{showKnown=e.target.checked;build(true)});
+$("dirFa").addEventListener("click",()=>setDir("fa"));
+$("dirRu").addEventListener("click",()=>setDir("ru"));
+$("q").addEventListener("input",renderList);
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT")return;
+  if(e.code==="Space"){e.preventDefault();flip()}
+  else if(e.key==="ArrowRight")answer(true);
+  else if(e.key==="ArrowLeft")answer(false);
+});
+if(topic!=="all"&&!TOPICS.includes(topic)) topic="all";
+renderChips(); setDir(dir); build(true); renderList();
+</script>
+
+</body>
+</html>
