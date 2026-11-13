@@ -91,10 +91,10 @@ td small{display:block;color:var(--muted);font-weight:400}
 <div class="wrap">
   <header>
     <div>
-      <h1>Фарси <span>с Амином</span></h1>
-      <p class="sub">Слова и буквы из чата с учителем и страниц учебника, июль–ноябрь</p>
+      <h1 id="h1">Фарси <span>с Амином</span></h1>
+      <p class="sub" data-i="sub">Слова и буквы из чата с учителем и страниц учебника, июль–ноябрь</p>
     </div>
-    <div class="stats"><div><b id="sTotal">0</b>слов</div><div><b id="sKnown">0</b>выучено</div></div>
+    <div class="stats"><div><b id="sTotal">0</b><span data-i="words">слов</span></div><div><b id="sKnown">0</b><span data-i="learned">выучено</span></div></div>
   </header>
 
   <div class="chips" id="chips" role="group" aria-label="Темы"></div>
@@ -108,9 +108,9 @@ td small{display:block;color:var(--muted);font-weight:400}
       <button id="langRu" aria-pressed="true">RU</button>
       <button id="langEn" aria-pressed="false">EN</button>
     </div>
-    <button class="ghost" id="shuffle">Перемешать</button>
+    <button class="ghost" id="shuffle" data-i="shuffle">Перемешать</button>
     <button class="ghost" id="reset">Сбросить прогресс</button>
-    <label class="tog"><input type="checkbox" id="showKnown"> показывать выученные</label>
+    <label class="tog"><input type="checkbox" id="showKnown"> <span data-i="showKnown">показывать выученные</span></label>
   </div>
 
   <div class="progress"><i id="bar"></i></div>
@@ -118,24 +118,24 @@ td small{display:block;color:var(--muted);font-weight:400}
   <div id="study">
     <div class="stage">
       <div class="card" id="card" tabindex="0" role="button" aria-label="Перевернуть карточку">
-        <div class="face front"><span class="tag" id="tagF"></span><span class="count" id="countF"></span><div class="word" id="wF"></div><div class="note" id="nF"></div><span class="hint">нажми, чтобы увидеть перевод</span></div>
+        <div class="face front"><span class="tag" id="tagF"></span><span class="count" id="countF"></span><div class="word" id="wF"></div><div class="note" id="nF"></div><span class="hint" data-i="hint">нажми, чтобы увидеть перевод</span></div>
         <div class="face back"><span class="tag" id="tagB"></span><span class="count" id="countB"></span><div class="word" id="wB"></div><div class="note" id="nB"></div></div>
       </div>
     </div>
     <div class="answer" style="margin-top:12px">
-      <button id="again">Повторить</button>
-      <button id="know">Знаю</button>
+      <button id="again" data-i="again">Повторить</button>
+      <button id="know" data-i="know">Знаю</button>
     </div>
   </div>
   <div class="done" id="done" hidden>
-    <h2>Тема пройдена</h2>
-    <p>Все карточки в этой теме отмечены как выученные.</p>
-    <button class="ghost" id="restart">Пройти ещё раз</button>
+    <h2 data-i="doneH">Тема пройдена</h2>
+    <p data-i="doneP">Все карточки в этой теме отмечены как выученные.</p>
+    <button class="ghost" id="restart" data-i="restart">Пройти ещё раз</button>
   </div>
-  <p class="sub" style="margin:0">Пробел — перевернуть · ← повторить · → знаю</p>
+  <p class="sub" style="margin:0" data-i="keys">Пробел — перевернуть · ← повторить · → знаю</p>
 
   <section class="list">
-    <div class="listhead"><h2>Все слова</h2><input id="q" type="search" placeholder="Поиск по фарси или русскому" aria-label="Поиск"></div>
+    <div class="listhead"><h2 data-i="allWords">Все слова</h2><input id="q" type="search" placeholder="Поиск по фарси или русскому" aria-label="Поиск"></div>
     <div style="overflow-x:auto"><table id="tbl"></table></div>
   </section>
 </div>
@@ -1972,6 +1972,12 @@ let topic=LS.get("fa-topic","all");
 let dir=LS.get("fa-dir","fa");
 let lang=LS.get("fa-lang","ru"); if(lang!=="en") lang="ru";
 const fw=c=>lang==="en"?c.fe:c.f, tw=c=>lang==="en"?c.e:c.r, tn=c=>lang==="en"?c.en:c.n;
+const UI={
+ ru:{sub:"Слова и буквы из чата с учителем и страниц учебника, июль–ноябрь",words:"слов",learned:"выучено",shuffle:"Перемешать",reset:"Сбросить прогресс",sure:"Точно сбросить?",showKnown:"показывать выученные",hint:"нажми, чтобы увидеть перевод",again:"Повторить",know:"Знаю",doneH:"Тема пройдена",doneP:"Все карточки в этой теме отмечены как выученные.",restart:"Пройти ещё раз",keys:"Пробел — перевернуть · ← повторить · → знаю",allWords:"Все слова",all:"Все",known:"выучено",none:"Ничего не найдено. Попробуй другое слово.",q:"Поиск по фарси или русскому",dirFa:"Фарси → Рус",dirRu:"Рус → Фарси",flip:"Перевернуть карточку"},
+ en:{sub:"Words and letters from the chat with my teacher and textbook pages, July–November",words:"words",learned:"learned",shuffle:"Shuffle",reset:"Reset progress",sure:"Reset for sure?",showKnown:"show learned",hint:"tap to see the translation",again:"Again",know:"I know it",doneH:"Topic complete",doneP:"Every card in this topic is marked as learned.",restart:"Go through again",keys:"Space — flip · ← again · → I know it",allWords:"All words",all:"All",known:"learned",none:"Nothing found. Try another word.",q:"Search Farsi or English",dirFa:"Farsi → Eng",dirRu:"Eng → Farsi",flip:"Flip the card"}
+};
+const TOPIC_EN={"Алфавит":"Alphabet","Семья и люди":"Family & people","Приветствия и вежливость":"Greetings & politeness","Вопросы":"Questions","Местоимения и маленькие слова":"Pronouns & small words","Глаголы":"Verbs","Время":"Time","Месяцы":"Months","Числа":"Numbers","Еда":"Food","Прилагательные":"Adjectives","Вещи и места":"Things & places","Грамматика":"Grammar","Фразы":"Phrases","Предложения из учебника":"Textbook sentences","Предложения: упражнения":"Exercise sentences","Из учебника":"From the textbook","Мои заметки":"My notes"};
+const L=k=>UI[lang][k], TN=t=>lang==="en"?(TOPIC_EN[t]||t):t;
 let showKnown=false;
 let deck=[],pos=0;
 const $=id=>document.getElementById(id);
@@ -1984,8 +1990,8 @@ function build(doShuffle){
   pos=0; render();
 }
 function renderChips(){
-  const all=[["all","Все",CARDS.length],...TOPICS.map(t=>[t,t,CARDS.filter(c=>c.t===t).length])];
-  $("chips").innerHTML=all.map(([k,l,n])=>`<button class="chip" data-k="${k}" aria-pressed="${k===topic}">${l}<small>${n}</small></button>`).join("");
+  const all=[["all",L("all"),CARDS.length],...TOPICS.map(t=>[t,TN(t),CARDS.filter(c=>c.t===t).length])];
+  $("chips").innerHTML=all.map(([k,l,n])=>`<button class="chip" data-k="${esc(k)}" aria-pressed="${k===topic}">${esc(l)}<small>${n}</small></button>`).join("");
 }
 function render(){
   $("card").classList.remove("flipped");
@@ -2003,7 +2009,7 @@ function render(){
   const isScript=w=>/^[؀-ۿ\s]+$/.test(w);
   $("wF").textContent=front.w; $("nF").textContent=front.n; $("wF").classList.toggle("script",isScript(front.w)); $("wF").classList.toggle("long",front.w.length>34);
   setTimeout(()=>{ $("wB").textContent=back.w; $("nB").textContent=back.n; $("wB").classList.toggle("script",isScript(back.w)); $("wB").classList.toggle("long",back.w.length>34); },160);
-  const tag=c.t+(known.has(c.id)?" · выучено":"");
+  const tag=TN(c.t)+(known.has(c.id)?" · "+L("known"):"");
   $("tagF").textContent=$("tagB").textContent=tag;
   $("countF").textContent=$("countB").textContent=`${(pos%deck.length)+1} / ${deck.length}`;
 }
@@ -2028,17 +2034,21 @@ function renderList(){
   for(const t of TOPICS){
     const rows=CARDS.filter(c=>c.t===t&&(!q||(c.f+" "+c.r+" "+c.n+" "+c.e+" "+c.en).toLowerCase().includes(q)));
     if(!rows.length) continue;
-    html+=`<tr class="topic"><td colspan="3">${esc(t)} · ${rows.length}</td></tr>`;
+    html+=`<tr class="topic"><td colspan="3">${esc(TN(t))} · ${rows.length}</td></tr>`;
     html+=rows.map(c=>`<tr><td${/^[؀-ۿ\s]+$/.test(c.f)?' class="sc"':''}>${esc(fw(c))}</td><td>${esc(tw(c))}${tn(c)?`<small>${esc(tn(c))}</small>`:""}</td><td class="k">${known.has(c.id)?"✓":""}</td></tr>`).join("");
   }
-  $("tbl").innerHTML=html||`<tr><td colspan="3">Ничего не найдено. Попробуй другое слово.</td></tr>`;
+  $("tbl").innerHTML=html||`<tr><td colspan="3">${L("none")}</td></tr>`;
 }
 function setDir(d){dir=d;LS.set("fa-dir",d);$("dirFa").setAttribute("aria-pressed",d==="fa");$("dirRu").setAttribute("aria-pressed",d==="ru");render()}
 function setLang(l){lang=l;LS.set("fa-lang",l);const en=l==="en";
   $("langRu").setAttribute("aria-pressed",!en);$("langEn").setAttribute("aria-pressed",en);
-  $("dirFa").textContent=en?"Фарси → Eng":"Фарси → Рус";$("dirRu").textContent=en?"Eng → Фарси":"Рус → Фарси";
-  $("q").placeholder=en?"Поиск: фарси или English":"Поиск по фарси или русскому";
-  render();renderList()}
+  $("dirFa").textContent=L("dirFa");$("dirRu").textContent=L("dirRu");$("q").placeholder=L("q");
+  document.querySelectorAll("[data-i]").forEach(el=>el.textContent=L(el.dataset.i));
+  const rb=$("reset");delete rb.dataset.armed;rb.textContent=L("reset");
+  $("h1").replaceChildren(en?"Farsi ":"Фарси ",Object.assign(document.createElement("span"),{textContent:en?"with Amin":"с Амином"}));
+  $("card").setAttribute("aria-label",L("flip"));
+  document.documentElement.lang=l;document.title=en?"Farsi with Amin":"Фарси с Амином";
+  renderChips();render();renderList()}
 
 $("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;topic=b.dataset.k;LS.set("fa-topic",topic);renderChips();build(true)});
 $("card").addEventListener("click",flip);
@@ -2048,8 +2058,8 @@ $("again").addEventListener("click",()=>answer(false));
 $("shuffle").addEventListener("click",()=>build(true));
 $("restart").addEventListener("click",()=>{pool().forEach(c=>known.delete(c.id));LS.set("fa-known",[...known]);build(true);renderList()});
 $("reset").addEventListener("click",function(){
-  if(this.dataset.armed){known=new Set();LS.set("fa-known",[]);delete this.dataset.armed;this.textContent="Сбросить прогресс";build(true);renderList();}
-  else{this.dataset.armed="1";this.textContent="Точно сбросить?";setTimeout(()=>{delete this.dataset.armed;this.textContent="Сбросить прогресс"},3000)}
+  if(this.dataset.armed){known=new Set();LS.set("fa-known",[]);delete this.dataset.armed;this.textContent=L("reset");build(true);renderList();}
+  else{this.dataset.armed="1";this.textContent=L("sure");setTimeout(()=>{delete this.dataset.armed;this.textContent=L("reset")},3000)}
 });
 $("showKnown").addEventListener("change",e=>{showKnown=e.target.checked;build(true)});
 $("dirFa").addEventListener("click",()=>setDir("fa"));
