@@ -46,6 +46,9 @@ h1 span{color:var(--turq)}
 .seg button[aria-pressed="true"]{background:var(--turq-soft);color:var(--turq)}
 .ghost{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .8125rem var(--body);padding:7px 12px;border-radius:10px;cursor:pointer}
 .ghost:hover,.chip:hover{border-color:var(--turq)}
+.datel{font-size:.8125rem;color:var(--muted)}
+#dateSel{max-width:100%;min-width:0}
+#dateSel:disabled+.seg{opacity:.5}
 label.tog{display:inline-flex;gap:6px;align-items:center;font-size:.8125rem;color:var(--muted);cursor:pointer;margin-left:auto}
 .progress{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .progress i{display:block;height:100%;background:var(--turq);width:0;transition:width .3s}
@@ -98,6 +101,15 @@ td small{display:block;color:var(--muted);font-weight:400}
   </header>
 
   <div class="chips" id="chips" role="group" aria-label="Темы"></div>
+
+  <div class="controls">
+    <label class="datel" for="dateSel" data-i="lesson">Урок</label>
+    <select id="dateSel" class="ghost"></select>
+    <div class="seg" role="group" aria-label="Режим даты">
+      <button id="dmOnly" aria-pressed="true" data-i="dmOnly">только этот день</button>
+      <button id="dmFrom" aria-pressed="false" data-i="dmFrom">с этого дня</button>
+    </div>
+  </div>
 
   <div class="controls">
     <div class="seg" role="group" aria-label="Направление">
@@ -2009,15 +2021,35 @@ It's not that much
 `
 };
 
+// Дата урока (ММ-ДД), когда слово впервые появилось в чате; ~ — дата соседней карточки
+const DATES = {"Алфавит":",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+"Семья и люди":"07-24,07-24,07-21,07-21,07-21,07-21,07-21,07-21,07-21,07-21,07-21,~07-21,~07-21,09-01,07-24,09-06,09-06,09-06,09-08,10-11,10-11,10-11,10-11,10-11,10-11,10-11,10-11,10-11,~10-11,09-06,09-06,10-11,10-11,08-02,09-27,08-26,08-26,10-25,10-25,08-18,09-29,08-02,08-02",
+"Приветствия и вежливость":"08-02,08-13,07-24,07-21,08-02,08-02,~08-02,08-02,08-02,07-21,08-02,08-04,08-04,10-06,08-02,08-02,07-30,07-30,07-30,08-04,08-13,08-04,08-09,~08-09,09-01,08-09,09-01,09-01,08-02,09-29,~09-29,10-27,10-27,10-27,09-01,10-14,09-01,09-01,08-11,07-21,09-13,09-27,08-16,08-18,09-15",
+"Вопросы":"08-02,09-13,09-13,07-24,08-02,09-13,11-10,09-06,08-02,08-02,09-01,09-01,09-29,09-20,09-22,10-18,08-21,08-21,08-04,07-21,08-02,09-22,10-13,10-13",
+"Местоимения и маленькие слова":"07-21,07-21,07-21,07-21,07-21,07-21,07-21,07-21,08-04,07-21,08-04,08-04,08-11,08-11,08-11,08-11,08-04,08-11,08-09,08-11,08-11,10-06,09-15,10-27,07-30,09-08,09-08,09-06,08-02,09-15,09-06,08-11,08-04,07-30,08-16,08-21,08-16,09-08,10-11,09-06,10-27,08-06,10-25,08-24,08-11,08-11,08-09,11-10,08-24,08-24,11-08,10-06,11-13,11-13",
+"Глаголы":"08-02,08-02,08-02,10-14,08-11,08-13,08-24,10-04,08-11,08-04,07-30,08-02,07-30,08-06,08-11,08-30,08-02,08-02,08-04,08-02,08-02,08-11,10-25,08-04,08-11,08-24,08-26,08-21,08-16,08-24,11-08,11-01,08-16,08-11,~08-11,08-11,08-30,08-30,08-30,~08-30,09-01,09-01,~09-01,~09-01,~09-01,~09-01,09-06,09-06,09-06,10-18,09-15,09-15,~09-15,09-08,09-24,09-27,09-27,10-25,09-22,10-04,08-24,11-01,10-06,10-06,10-14,10-25,10-18,~10-18,~10-18,10-14,07-30,~07-30,11-08,11-03,11-03,11-03,~11-03,10-25,~10-25,~10-25,10-04,08-24,08-26,11-13",
+"Время":"08-26,08-13,08-26,08-26,08-26,08-26,08-11,08-11,08-11,08-26,08-26,08-26,08-26,09-06,07-27,07-27,09-06,09-06,09-06,09-06,09-06,09-06,09-06,09-06,08-26,08-26,08-26,08-26,08-26,08-26,08-26,09-01,09-20,09-20,09-20,09-20,09-20,09-13,09-22,08-21,10-18,09-22,09-22,09-22,09-22,08-21,10-18,10-18,10-18,10-18,10-18,10-18,10-18,10-18,10-18,10-18",
+"Месяцы":"09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08",
+"Числа":"08-26,07-30,08-04,08-26,08-26,08-26,08-26,08-26,08-26,08-26,08-26,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,09-20,10-30,10-30,10-30,10-30,10-30,10-30,10-30,10-30,10-30,09-06,09-22,09-22,09-22,09-22,09-22,~09-22",
+"Еда":"07-27,08-21,08-11,08-11,08-11,09-27,09-27,09-27,10-14,10-06,10-18,10-13,09-22,09-27,09-27,09-27,09-27,08-02,10-13",
+"Прилагательные":"07-21,07-21,11-10,11-10,11-10,11-10,11-10,09-27,11-10,11-10,11-10,11-10,11-10,09-15,09-15,11-10,11-10,11-10,11-10,11-08,11-10,11-10,11-10,11-10,11-10,11-10,11-10,11-10,11-10,10-27,11-10,11-10,11-10,07-27,10-25,10-25,10-25,08-26,08-11,10-27,10-11,09-06,08-21,08-21,11-10,11-16,11-16,11-16,11-16,11-16,11-16,11-16,11-16,11-16,11-16,11-16,08-04,11-16,11-16,08-24",
+"Вещи и места":"07-30,09-29,09-15,09-01,08-30,~08-30,09-08,10-25,08-18,09-22,09-22,08-16,09-01,09-01,09-01,09-01,09-01,09-01,09-01,07-27,10-25,10-14,08-02,10-30,10-25,10-06,~10-06,~10-06,10-18,09-01,09-15,10-25,08-11,08-16,08-16,08-04,07-30,10-14,09-01,09-01,08-02,10-13,10-13,08-21,10-27,~10-27,09-29,09-29,09-29,09-01,09-01,09-06,09-06,09-06,09-06,11-03,11-03,11-03,11-03,11-03,11-03,10-25,10-25",
+"Грамматика":"07-19,08-02,07-30,09-13,07-21,08-24,07-24,08-06,07-30,07-21,09-01,09-13,10-06,11-05,11-16",
+"Фразы":"07-21,~07-21,08-30,09-29,09-29,09-01,08-02,08-11,08-16,08-04,08-04,08-04,~08-04,~08-04,08-04,~08-04,11-03,11-03,08-02,~08-02,09-29,09-29,~09-29,08-24,09-22,09-20,11-08,10-11,10-27,11-10,~11-10,~11-10,10-18,10-25,09-08,~09-08,10-14,08-04,08-11,,,,,,,,,,,,",
+"Предложения из учебника":",,07-21,,,,,,,,08-02,,,08-11,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,11-03,,,,,,,,,",
+"Предложения: упражнения":"08-18,08-18,09-08,09-08,09-08,09-08,10-27,10-27,~10-27,~10-27,~10-27,08-18,~08-18,08-18,08-18,08-18,08-21,08-21,08-24,~08-24,~08-24,11-01,08-24,~08-24,08-26,08-26,~08-26,~08-26,~08-26,08-26,~08-26,~08-26,~08-26,~08-26,~08-26,~08-26,~08-26,10-11,10-11,~10-11,~10-11,~10-11,09-22,~09-22,~09-22,~09-22,09-22,~09-22,~09-22,~09-22,~09-22,09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,09-29,~09-29,10-01,08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,11-16,11-16,11-16,11-16",
+"Из учебника":"08-04,,,,,,10-06,,,,,,,,,,11-01,,,,,07-24,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,08-26,,,,,,,,10-06,,,,,,,,,,,,,,,,,,,08-16,,,,,,,08-24,,,,,,,,,,09-13,,,11-16,,,,,,,,,11-03,,,11-08,",
+"Мои заметки":"~09-13,09-13,~09-13,~09-13,~09-13,09-13,09-13,09-13,~09-13,09-24,10-20,09-08,10-25,~10-25,11-05,~11-05,11-08,11-08,11-08,~11-08,~11-08,11-08,11-08,11-13,11-13,11-13,11-13"};
 const CARDS=[];
 const EN_NOTE={"перевод мой — сверь с учителем":"my translation — check with your teacher","из чата":"from the chat"};
 for(const [topic,block] of Object.entries(RAW)){
   const enLines=(EN[topic]||"").trim().split("\n");
+  const dLines=(DATES[topic]||"").split(",");
   block.trim().split("\n").forEach((line,i)=>{
     const [f,r,n]=line.split("|").map(s=>s&&s.trim());
     const [e,en]=(enLines[i]||"").split("|").map(s=>s&&s.trim());
     const note=n||"";
-    if(f&&r) CARDS.push({id:topic+"::"+f,f,r,n:note,e:e||r,en:en||EN_NOTE[note]||note,fe:f.replace(/глагол/g,"verb"),t:topic});
+    if(f&&r) CARDS.push({id:topic+"::"+f,f,r,n:note,e:e||r,en:en||EN_NOTE[note]||note,fe:f.replace(/глагол/g,"verb"),t:topic,d:(dLines[i]||"").replace("~",""),o:CARDS.length});
   });
 }
 const TOPICS=Object.keys(RAW);
@@ -2034,15 +2066,30 @@ const UI={
 };
 const TOPIC_EN={"Алфавит":"Alphabet","Семья и люди":"Family & people","Приветствия и вежливость":"Greetings & politeness","Вопросы":"Questions","Местоимения и маленькие слова":"Pronouns & small words","Глаголы":"Verbs","Время":"Time","Месяцы":"Months","Числа":"Numbers","Еда":"Food","Прилагательные":"Adjectives","Вещи и места":"Things & places","Грамматика":"Grammar","Фразы":"Phrases","Предложения из учебника":"Textbook sentences","Предложения: упражнения":"Exercise sentences","Из учебника":"From the textbook","Мои заметки":"My notes"};
 const L=k=>UI[lang][k], TN=t=>lang==="en"?(TOPIC_EN[t]||t):t;
+Object.assign(UI.ru,{lesson:"Урок",dmOnly:"только этот день",dmFrom:"с этого дня",allDates:"Все даты",noDate:"Учебник (без даты)"});
+Object.assign(UI.en,{lesson:"Lesson",dmOnly:"this day only",dmFrom:"from this day on",allDates:"All dates",noDate:"Textbook (no date)"});
+const MON={ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]};
+const fmtD=d=>{const [m,day]=d.split("-").map(Number);return lang==="en"?MON.en[m-1]+" "+day:day+" "+MON.ru[m-1]};
+let dateF=LS.get("fa-date","all"), dmode=LS.get("fa-dmode","only");
+function renderDates(){
+  const s=$("dateSel"), days=[...new Set(CARDS.map(c=>c.d).filter(Boolean))].sort();
+  if(dateF!=="all"&&dateF!=="none"&&!days.includes(dateF)) dateF="all";
+  const opt=(v,t)=>Object.assign(document.createElement("option"),{value:v,textContent:t,selected:v===dateF});
+  s.replaceChildren(opt("all",L("allDates")),...days.slice().reverse().map(d=>opt(d,fmtD(d)+" · "+CARDS.filter(c=>c.d===d).length)),opt("none",L("noDate")+" · "+CARDS.filter(c=>!c.d).length));
+  $("dmOnly").setAttribute("aria-pressed",dmode!=="from");$("dmFrom").setAttribute("aria-pressed",dmode==="from");
+  const off=dateF==="all"||dateF==="none";$("dmOnly").disabled=$("dmFrom").disabled=off;
+}
 let showKnown=false;
 let deck=[],pos=0;
 const $=id=>document.getElementById(id);
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function pool(){return CARDS.filter(c=>(topic==="all"||c.t===topic))}
+function dateOk(c){if(dateF==="all")return true;if(dateF==="none")return !c.d;return dmode==="from"?(c.d&&c.d>=dateF):c.d===dateF}
+function pool(){return CARDS.filter(c=>(topic==="all"||c.t===topic)&&dateOk(c))}
 function build(doShuffle){
   deck=pool().filter(c=>showKnown||!known.has(c.id));
-  if(doShuffle) shuffle(deck);
+  if(dateF!=="all"&&doShuffle!=="force") deck.sort((a,b)=>(a.d||"99").localeCompare(b.d||"99")||a.o-b.o);
+  else if(doShuffle) shuffle(deck);
   pos=0; render();
 }
 function renderChips(){
@@ -2065,7 +2112,7 @@ function render(){
   const isScript=w=>/^[؀-ۿ\s]+$/.test(w);
   $("wF").textContent=front.w; $("nF").textContent=front.n; $("wF").classList.toggle("script",isScript(front.w)); $("wF").classList.toggle("long",front.w.length>34);
   setTimeout(()=>{ $("wB").textContent=back.w; $("nB").textContent=back.n; $("wB").classList.toggle("script",isScript(back.w)); $("wB").classList.toggle("long",back.w.length>34); },160);
-  const tag=TN(c.t)+(known.has(c.id)?" · "+L("known"):"");
+  const tag=TN(c.t)+(c.d?" · "+fmtD(c.d):"")+(known.has(c.id)?" · "+L("known"):"");
   $("tagF").textContent=$("tagB").textContent=tag;
   $("countF").textContent=$("countB").textContent=`${(pos%deck.length)+1} / ${deck.length}`;
 }
@@ -2104,14 +2151,17 @@ function setLang(l){lang=l;LS.set("fa-lang",l);const en=l==="en";
   $("h1").replaceChildren(en?"Farsi ":"Фарси ",Object.assign(document.createElement("span"),{textContent:en?"with Amin":"с Амином"}));
   $("card").setAttribute("aria-label",L("flip"));
   document.documentElement.lang=l;document.title=en?"Farsi with Amin":"Фарси с Амином";
-  renderChips();render();renderList()}
+  renderChips();renderDates();render();renderList()}
+$("dateSel").addEventListener("change",e=>{dateF=e.target.value;LS.set("fa-date",dateF);renderDates();build(true)});
+$("dmOnly").addEventListener("click",()=>{dmode="only";LS.set("fa-dmode",dmode);renderDates();build(true)});
+$("dmFrom").addEventListener("click",()=>{dmode="from";LS.set("fa-dmode",dmode);renderDates();build(true)});
 
 $("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;topic=b.dataset.k;LS.set("fa-topic",topic);renderChips();build(true)});
 $("card").addEventListener("click",flip);
 $("card").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();flip()}});
 $("know").addEventListener("click",()=>answer(true));
 $("again").addEventListener("click",()=>answer(false));
-$("shuffle").addEventListener("click",()=>build(true));
+$("shuffle").addEventListener("click",()=>build("force"));
 $("restart").addEventListener("click",()=>{pool().forEach(c=>known.delete(c.id));LS.set("fa-known",[...known]);build(true);renderList()});
 $("reset").addEventListener("click",function(){
   if(this.dataset.armed){known=new Set();LS.set("fa-known",[]);delete this.dataset.armed;this.textContent=L("reset");build(true);renderList();}
