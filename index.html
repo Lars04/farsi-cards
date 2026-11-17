@@ -1084,6 +1084,49 @@ mishe | можно; получится | mishe…? — можно…?
 Mishe pool behem gharz bedid? | Можете одолжить мне денег?
 Un ghadr pool baham nist | У меня с собой нет столько денег
 Kheili ziad nist | Не так уж много
+halghe | кольцо; круг
+`,
+"Внешность": `
+zaher | внешность
+nozad | новорождённый
+no javan / no javoon | подросток
+javan / javoon | молодой
+mian sal | средних лет
+pir | старый (о человеке)
+ghad | рост
+ghad boland · kootah ghad | высокий · низкого роста
+ghade motovaset | среднего роста
+Ghadam bolande | Я высокий | букв. «мой рост высокий»
+shekl / form | фигура, форма
+roo form | в форме (подтянутый)
+moo | волосы
+Man mooye kootahe safe meshki daram | У меня короткие прямые чёрные волосы
+motovaset | средний; средней длины
+saf · ferferi · mojdar | прямые · кудрявые · волнистые (волосы)
+siah / meshki | чёрный
+sefid | белый
+ghahvei | коричневый
+khakestari | серый; седой
+bolond / boor | светлые волосы, блондин
+cheshmha | глаза
+Man cheshmaye doroshte meshki daram | У меня большие чёрные глаза
+riz | мелкий, маленький
+abi · sabz | голубой · зелёный
+sibil | усы
+tah rish | щетина
+Man sibil nadaram | У меня нет усов
+Man sibil nemizaram | Я не отращиваю усы
+eynak | очки
+Man eynak mizanam | Я ношу очки
+Man bayad eynak bezanam | Мне нужно носить очки
+bini / damagh | нос
+goosh | ухо
+Man gooshaye bozorgi daram | У меня большие уши
+Man binie kuchiki daram | У меня маленький нос
+angoshtar | кольцо
+gooshvareh | серьги
+gardan band | ожерелье
+dast band | браслет
 `
 };
 
@@ -2018,6 +2061,49 @@ can (it be); would it be possible | mishe…? — could you…?
 Could you lend me some money?
 I don't have that much money on me
 It's not that much
+ring; circle
+`,
+"Внешность": `
+appearance
+newborn
+teenager
+young
+middle-aged
+old (about a person)
+height
+tall · short
+medium height
+I'm tall | literally "my height is tall"
+shape, figure
+in shape
+hair
+I have short straight black hair
+medium; medium-length
+straight · curly · wavy (hair)
+black
+white
+brown
+gray
+blonde
+eyes
+I have big black eyes
+small, tiny
+blue · green
+mustache
+stubble
+I don't have a mustache
+I don't grow a mustache
+glasses
+I wear glasses
+I have to wear glasses
+nose
+ear
+I have big ears
+I have a small nose
+ring
+earring
+necklace
+bracelet
 `
 };
 
@@ -2039,7 +2125,8 @@ const DATES = {"Алфавит":"07-30,07-30,07-30,07-30,07-30,08-09,08-09,08-09
 "Предложения из учебника":"07-21,07-21,07-21,07-21,07-21,07-21,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,09-08,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03",
 "Предложения: упражнения":"08-18,08-18,09-08,09-08,09-08,09-08,10-27,10-27,~10-27,~10-27,~10-27,08-18,~08-18,08-18,08-18,08-18,08-21,08-21,08-24,~08-24,~08-24,11-01,08-24,~08-24,08-26,08-26,~08-26,~08-26,~08-26,08-26,~08-26,~08-26,~08-26,~08-26,~08-26,~08-26,~08-26,10-11,10-11,~10-11,~10-11,~10-11,09-22,~09-22,~09-22,~09-22,09-22,~09-22,~09-22,~09-22,~09-22,09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,~09-27,09-29,~09-29,10-01,08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,~08-11,11-16,11-16,11-16,11-16",
 "Из учебника":"07-21,07-21,07-21,07-21,09-06,08-16,08-16,08-16,10-13,08-16,08-16,08-16,08-16,08-16,08-16,08-16,08-16,10-27,10-27,10-27,10-27,07-21,07-21,07-21,07-21,07-21,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-04,08-16,09-08,09-08,09-08,09-08,09-08,11-01,11-01,11-01,11-01,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,10-13,11-01,09-15,11-01,08-09,08-09,08-09,08-09,08-09,08-09,08-09,08-09,08-09,08-09,11-01,11-01,08-24,08-24,08-24,08-24,08-24,08-24,08-24,09-17,09-17,09-17,09-17,07-30,07-30,07-30,07-30,07-30,07-30,07-30,07-30,07-30,11-01,11-01,08-24,08-24,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03,11-03",
-"Мои заметки":"~09-13,09-13,~09-13,~09-13,~09-13,09-13,09-13,09-13,~09-13,09-24,10-20,09-08,10-25,~10-25,11-05,~11-05,11-08,11-08,11-08,~11-08,~11-08,11-08,11-08,11-13,11-13,11-13,11-13"};
+"Мои заметки":"~09-13,09-13,~09-13,~09-13,~09-13,09-13,09-13,09-13,~09-13,09-24,10-20,09-08,10-25,~10-25,11-05,~11-05,11-08,11-08,11-08,~11-08,~11-08,11-08,11-08,11-13,11-13,11-13,11-13,11-17",
+"Внешность":"11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17,11-17"};
 const CARDS=[];
 const EN_NOTE={"перевод мой — сверь с учителем":"my translation — check with your teacher","из чата":"from the chat"};
 for(const [topic,block] of Object.entries(RAW)){
@@ -2064,7 +2151,7 @@ const UI={
  ru:{sub:"Слова и буквы из чата с учителем и страниц учебника, июль–ноябрь",words:"слов",learned:"выучено",shuffle:"Перемешать",reset:"Сбросить прогресс",sure:"Точно сбросить?",showKnown:"показывать выученные",hint:"нажми, чтобы увидеть перевод",again:"Повторить",know:"Знаю",doneH:"Тема пройдена",doneP:"Все карточки в этой теме отмечены как выученные.",restart:"Пройти ещё раз",keys:"Пробел — перевернуть · ← повторить · → знаю",allWords:"Все слова",all:"Все",known:"выучено",none:"Ничего не найдено. Попробуй другое слово.",q:"Поиск по фарси или русскому",dirFa:"Фарси → Рус",dirRu:"Рус → Фарси",flip:"Перевернуть карточку"},
  en:{sub:"Words and letters from the chat with my teacher and textbook pages, July–November",words:"words",learned:"learned",shuffle:"Shuffle",reset:"Reset progress",sure:"Reset for sure?",showKnown:"show learned",hint:"tap to see the translation",again:"Again",know:"I know it",doneH:"Topic complete",doneP:"Every card in this topic is marked as learned.",restart:"Go through again",keys:"Space — flip · ← again · → I know it",allWords:"All words",all:"All",known:"learned",none:"Nothing found. Try another word.",q:"Search Farsi or English",dirFa:"Farsi → Eng",dirRu:"Eng → Farsi",flip:"Flip the card"}
 };
-const TOPIC_EN={"Алфавит":"Alphabet","Семья и люди":"Family & people","Приветствия и вежливость":"Greetings & politeness","Вопросы":"Questions","Местоимения и маленькие слова":"Pronouns & small words","Глаголы":"Verbs","Время":"Time","Месяцы":"Months","Числа":"Numbers","Еда":"Food","Прилагательные":"Adjectives","Вещи и места":"Things & places","Грамматика":"Grammar","Фразы":"Phrases","Предложения из учебника":"Textbook sentences","Предложения: упражнения":"Exercise sentences","Из учебника":"From the textbook","Мои заметки":"My notes"};
+const TOPIC_EN={"Алфавит":"Alphabet","Семья и люди":"Family & people","Приветствия и вежливость":"Greetings & politeness","Вопросы":"Questions","Местоимения и маленькие слова":"Pronouns & small words","Глаголы":"Verbs","Время":"Time","Месяцы":"Months","Числа":"Numbers","Еда":"Food","Прилагательные":"Adjectives","Вещи и места":"Things & places","Грамматика":"Grammar","Фразы":"Phrases","Предложения из учебника":"Textbook sentences","Предложения: упражнения":"Exercise sentences","Из учебника":"From the textbook","Мои заметки":"My notes","Внешность":"Appearance"};
 const L=k=>UI[lang][k], TN=t=>lang==="en"?(TOPIC_EN[t]||t):t;
 Object.assign(UI.ru,{lesson:"Урок",dmOnly:"только этот день",dmFrom:"с этого дня",allDates:"Все даты",noDate:"Учебник (без даты)"});
 Object.assign(UI.en,{lesson:"Lesson",dmOnly:"this day only",dmFrom:"from this day on",allDates:"All dates",noDate:"Textbook (no date)"});
